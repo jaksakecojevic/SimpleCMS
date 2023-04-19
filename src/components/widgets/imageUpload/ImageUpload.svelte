@@ -2,6 +2,7 @@
 	import axios from 'axios';
 	import type { FieldType } from './';
 	export let field: FieldType | undefined;
+
 	//value is File when used inside imageArray, is dbObject when shown from entrylist.
 	export let value: any = {};
 	export let fieldValue: FileList;

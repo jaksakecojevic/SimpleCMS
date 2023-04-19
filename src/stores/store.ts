@@ -17,6 +17,3 @@ export const toggleLeftSidebar: Writable<boolean> = writable(true);
 
 // Store detault SystemLanguage
 export const systemLanguage: Writable<string> = writable('en');
-
-// light dark mode
-export const setTheme: Writable<boolean> = writable(true);

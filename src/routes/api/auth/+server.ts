@@ -1,5 +1,6 @@
 import type { RequestHandler } from './$types';
 import { auth } from '@src/routes/api/db';
+
 export const POST: RequestHandler = async ({ request }) => {
 	let formData = await request.formData();
 	let email = formData.get('email') as string;
@@ -42,6 +43,7 @@ async function signIn(email: string, password: string) {
 	let user = await auth.getUser(key.userId);
 	return new Response(JSON.stringify({ userername: user.username, session: session.sessionId, status: 200 }));
 }
+
 async function validate(sessionID: string | null) {
 	if (!sessionID) {
 		return new Response(JSON.stringify({ status: 404 }));

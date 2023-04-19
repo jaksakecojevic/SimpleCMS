@@ -1,6 +1,7 @@
 import type { RequestHandler } from './$types';
 import { collections } from '@src/routes/api/db';
 import { parse, saveFiles } from '@src/utils/utils';
+
 export const GET: RequestHandler = async ({ params, url }) => {
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let collection = collections[params.collection];

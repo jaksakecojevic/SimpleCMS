@@ -5,8 +5,8 @@
 	import AnimatedHamburger from '@src/components/AnimatedHamburger.svelte';
 	import Avatar from '../avatar/Avatar.svelte';
 	import Badges from '../badges/Badges.svelte';
-
-	//import ThemeSwitch from '@src/components/ThemeSwitch.svelte';
+	import ThemeSwitcher from '@src/components/ThemeSwitcher.svelte';
+	import Button from '../buttons/Button.svelte';
 
 	export let switchSideBar = true;
 	const pkg = __VERSION__;
@@ -84,38 +84,43 @@
 			</svg>
 		</div>
 	</header>
+
 	<main class="flex-auto items-center justify-start">
 		<Collections />
+		<a href="/gallery"><Button iconLeft="bi:images" btnClass="uppercase w-full">Gallery</Button></a>
 	</main>
-	<footer class="mt-auto mb-1 text-white px-1 pb-2">
+
+	<footer class="mt-auto text-white px-1 pb-2 text-center">
 		<div class="border-t mx-1 mb-1" />
 
 		<div class="{switchSideBar ? 'grid-rows-3 grid-cols-3 ' : 'grid-rows-2 grid-cols-2 '} grid overflow-hidden justify-center items-center">
 			<!-- Avatar with user settings -->
-			<div class="{switchSideBar ? 'order-1 row-span-2' : 'order-1 '} ">
-				<Avatar width="w-11" src="static/Default_User.svg" />
+			<div class="{switchSideBar ? 'order-1 row-span-2' : 'order-1 '} mx-auto">
+				<a href="/user"><Avatar width="w-10" src="/Default_User.svg" /></a>
 			</div>
+
 			<!-- System Language i18n Handeling -->
-			<div class="{switchSideBar ? 'order-3 row-span-2' : 'order-2'} ">Lang</div>
+			<div class="{switchSideBar ? 'order-3 row-span-2' : 'order-2'} ">EN</div>
 
 			<!-- light/dark mode switch -->
-			<div class="{switchSideBar ? 'order-2' : 'order-3'} ">
-				<iconify-icon icon="bi:moon-fill" width="16" />
+			<div class="{switchSideBar ? 'order-2 pt-4' : 'order-3'} ">
+				<ThemeSwitcher />
 			</div>
 
 			<!-- Lucia Sign Out -->
 			<div class="{switchSideBar ? 'order-4' : 'order-4 '} mt-2">
 				<iconify-icon icon="uil:signout" width="24" />
 			</div>
+
 			<!-- Github discussions -->
-			<div class="{switchSideBar ? 'order-5 ml-7' : 'order-5 hidden'} ">
+			<div class="{switchSideBar ? 'order-5  ml-2 mt-2' : 'order-5 hidden'} ">
 				<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
 					<iconify-icon icon="mdi:comment-help" width="26" />
 				</a>
 			</div>
 
 			<!-- CMS Version -->
-			<div class={switchSideBar ? 'order-6' : 'order-6 col-span-2'}>
+			<div class="{switchSideBar ? 'order-6 ' : 'order-6  '} col-span-2 mx-auto">
 				<a href="https://github.com/Rar9/SimpleCMS/" target="blank">
 					<Badges text={`${switchSideBar ? 'Version: ' : ''}${pkg}`} color="primary" />
 				</a>
@@ -123,6 +128,3 @@
 		</div>
 	</footer>
 </section>
-
-<style lang="postcss">
-</style>

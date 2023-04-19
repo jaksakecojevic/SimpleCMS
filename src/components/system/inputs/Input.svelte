@@ -11,7 +11,7 @@
 
 <div>
 	{#if label}
-		<label for="input" class={labelClass}>{label}</label>
+		<label for="input" class="{labelClass} capitalize">{label}</label>
 	{/if}
 	<input {type} on:input={handleInput} id="input" class={inputClass} {value} />
 </div>
