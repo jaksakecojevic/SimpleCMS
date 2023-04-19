@@ -5,6 +5,7 @@
 	import { collection } from '@src/stores/load';
 	import { config, obj2formData } from '@src/utils/utils';
 	import { entryValue } from '@src/stores/widgetStore';
+
 	async function saveData() {
 		let formData = obj2formData($collectionValue);
 		switch ($mode) {
@@ -20,22 +21,57 @@
 	}
 </script>
 
-<div class="container">
+<div class="container pt-2">
 	{#if $mode == 'view'}
 		<Button on:click={() => mode.set('create')}>Create</Button>
 	{:else if ['edit', 'create'].includes($mode)}
-		<Button on:click={saveData}>Save</Button>
+		<header>
+			<Button on:click={saveData}>Save</Button>
+		</header>
+		<main class="text-white">
+			<h2 class="font-bold">Widget Area:</h2>
+			<p>Seo widget</p>
+		</main>
+		<footer class="text-white">
+			<h2 class="font-bold text-center">Content Info:</h2>
+			<div class="footer-content">
+				<!-- TODO: Use real dates & revision -->
+				<div><span>Created:</span><span>16.04.2023</span></div>
+				<div><span>Updated:</span><span>17.04.2023</span></div>
+				<div><span>Revisions:</span><span>2</span></div>
+			</div>
+		</footer>
 	{/if}
 </div>
 
-<style>
+<style lang="postcss">
 	.container {
 		display: flex;
-		align-items: center;
-		justify-content: start;
 		flex-direction: column;
 		width: 200px;
 		height: 100vh;
 		background-color: #242734;
+	}
+	header {
+		flex: 0 0 auto;
+		text-align: center;
+	}
+	main {
+		flex: 1 1 auto;
+		align-items: center;
+		text-align: center;
+		justify-content: flex-start;
+		padding: 1rem 0.5rem;
+	}
+	footer {
+		flex: 0 0 auto;
+		padding: 0 0.5rem 1.5rem;
+	}
+	.footer-content > div {
+		display: flex;
+		justify-content: space-between;
+	}
+	.footer-content > div > span:first-child {
+		margin-right: 1rem;
 	}
 </style>

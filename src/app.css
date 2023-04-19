@@ -1,26 +1,29 @@
+@import './theme.postcss';
+
+/* Write your global styles here, in PostCSS syntax */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-    .wiggle {
-        animation: wiggle 0.3s forwards;
-    }
-    @keyframes wiggle {
-        0% {
-            transform: translateX(0);
-        }
-        25% {
-            transform: translateX(150px);
-        }
-        50% {
-            transform: translateX(-75px);
-        }
-        75% {
-            transform: translateX(200px);
-        }
-        100% {
-            transform: translateX(0px);
-        }
-    }
+	.wiggle {
+		animation: wiggle 0.3s forwards;
+	}
+	@keyframes wiggle {
+		0% {
+			transform: translateX(0);
+		}
+		25% {
+			transform: translateX(150px);
+		}
+		50% {
+			transform: translateX(-75px);
+		}
+		75% {
+			transform: translateX(200px);
+		}
+		100% {
+			transform: translateX(0px);
+		}
+	}
 }

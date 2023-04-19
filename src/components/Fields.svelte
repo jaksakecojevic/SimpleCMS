@@ -4,11 +4,13 @@
 	collection.subscribe((value) => {
 		$collectionValue = {};
 	});
+
 	export let fields: typeof $collection.fields | undefined = undefined;
+
 	let asAny = (value: any) => value;
 </script>
 
-<div class="container">
+<div class="container text-white">
 	{#each fields || $collection.fields as field, index}
 		{#if field.widget}
 			{#key $collection}
@@ -21,7 +23,7 @@
 	{/each}
 </div>
 
-<style>
+<style lang="postcss">
 	.container {
 		display: flex;
 		align-items: center;

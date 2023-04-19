@@ -1,16 +1,128 @@
 <script lang="ts">
+	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
+	import { PUBLIC_SITENAME } from '$env/static/public';
 	import Collections from './Collections.svelte';
+	import AnimatedHamburger from '@src/components/AnimatedHamburger.svelte';
+	import Avatar from '../avatar/Avatar.svelte';
+	import Badges from '../badges/Badges.svelte';
+
+	//import ThemeSwitch from '@src/components/ThemeSwitch.svelte';
+
+	export let switchSideBar = true;
+	const pkg = __VERSION__;
+
+	// search filter
+	let filterCollections = '';
+	// TODO: collection parent names should hide on search
+	function updateFilter(e: KeyboardEvent) {
+		filterCollections = (e.target as HTMLInputElement).value.toLowerCase();
+	}
 </script>
 
-<section>
-	<Collections />
+<section class="relative bg-gray-800 pt-2 w-[225px] px-1 flex flex-col h-screen">
+	<header class="flex flex-col text-center">
+		{#if !switchSideBar}
+			<AnimatedHamburger />
+		{/if}
+
+		<!-- Corporate Identity -->
+		{#if switchSideBar}
+			<a href="/" class="py-2 flex !no-underline">
+				<SimpleCmsLogo fill="red" className="h-8" />
+
+				<span class="pl-1 text-2xl font-bold text-black dark:text-white">{PUBLIC_SITENAME}</span>
+			</a>
+		{/if}
+
+		<!-- sidebar collapse button -->
+		<button
+			class="z-10 absolute top-2 flex justify-center items-center -right-2 !rounded-full border-2 border-surface-300"
+			on:click={() => (switchSideBar = !switchSideBar)}
+		>
+			{#if !switchSideBar}
+				<!-- Icon Collpased -->
+				<iconify-icon
+					icon="bi:arrow-left-circle-fill"
+					width="30"
+					class="rotate-180 rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
+				/>
+			{:else}
+				<!-- Icon expanded -->
+				<iconify-icon
+					icon="bi:arrow-left-circle-fill"
+					width="30"
+					class="rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
+				/>
+			{/if}
+		</button>
+
+		<div class="relative mx-auto my-2">
+			{#if !switchSideBar}
+				<input
+					on:keyup={updateFilter}
+					on:focus={() => (switchSideBar = !switchSideBar)}
+					placeholder="Search"
+					class="relative z-10 h-10 w-10 cursor-pointer !rounded-full border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-surface-600/50 dark:text-white md:mt-0 md:h-12"
+				/>
+			{:else}
+				<input
+					on:keyup={updateFilter}
+					placeholder="Search"
+					class="relative z-10 h-10 w-full cursor-pointer rounded-md border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-surface-600/50 dark:text-white"
+				/>
+			{/if}
+			<!-- search icon -->
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-black px-3 dark:stroke-white"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+				stroke-width="2"
+			>
+				<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+			</svg>
+		</div>
+	</header>
+	<main class="flex-auto items-center justify-start">
+		<Collections />
+	</main>
+	<footer class="mt-auto mb-1 text-white px-1 pb-2">
+		<div class="border-t mx-1 mb-1" />
+
+		<div class="{switchSideBar ? 'grid-rows-3 grid-cols-3 ' : 'grid-rows-2 grid-cols-2 '} grid overflow-hidden justify-center items-center">
+			<!-- Avatar with user settings -->
+			<div class="{switchSideBar ? 'order-1 row-span-2' : 'order-1 '} ">
+				<Avatar width="w-11" src="static/Default_User.svg" />
+			</div>
+			<!-- System Language i18n Handeling -->
+			<div class="{switchSideBar ? 'order-3 row-span-2' : 'order-2'} ">Lang</div>
+
+			<!-- light/dark mode switch -->
+			<div class="{switchSideBar ? 'order-2' : 'order-3'} ">
+				<iconify-icon icon="bi:moon-fill" width="16" />
+			</div>
+
+			<!-- Lucia Sign Out -->
+			<div class="{switchSideBar ? 'order-4' : 'order-4 '} mt-2">
+				<iconify-icon icon="uil:signout" width="24" />
+			</div>
+			<!-- Github discussions -->
+			<div class="{switchSideBar ? 'order-5 ml-7' : 'order-5 hidden'} ">
+				<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
+					<iconify-icon icon="mdi:comment-help" width="26" />
+				</a>
+			</div>
+
+			<!-- CMS Version -->
+			<div class={switchSideBar ? 'order-6' : 'order-6 col-span-2'}>
+				<a href="https://github.com/Rar9/SimpleCMS/" target="blank">
+					<Badges text={`${switchSideBar ? 'Version: ' : ''}${pkg}`} color="primary" />
+				</a>
+			</div>
+		</div>
+	</footer>
 </section>
 
-<style>
-	section {
-		background: #242734;
-		width: 240px;
-		padding: 0 4px;
-		height: 100vh;
-	}
+<style lang="postcss">
 </style>

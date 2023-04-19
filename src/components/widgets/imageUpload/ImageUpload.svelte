@@ -41,7 +41,7 @@
 	<img src={URL.createObjectURL(fieldValue[0])} alt="" />
 {/if}
 
-<style>
+<style lang="postcss">
 	img {
 		max-width: 600px;
 		max-height: 200px;

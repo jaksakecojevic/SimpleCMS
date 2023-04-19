@@ -6,6 +6,7 @@
 	import { writable } from 'svelte/store';
 	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel } from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
+
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
 	let refresh = async (collection: typeof $collection) => {
@@ -87,7 +88,7 @@
 	</tfoot>
 </table>
 
-<style>
+<style lang="postcss">
 	th,
 	td {
 		min-width: 120px;

@@ -16,7 +16,7 @@
 	<input {type} on:input={handleInput} id="input" class={inputClass} {value} />
 </div>
 
-<style>
+<style lang="postcss">
 	div {
 		min-width: 280px;
 		margin: 5px;

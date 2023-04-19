@@ -9,7 +9,12 @@ let categories = [
 		collections: [Posts2, Posts3]
 	},
 	{
-		name: 'posts',
+		name: 'Menu',
+		icon: 'bi:images',
+		collections: [Posts]
+	},
+	{
+		name: 'Gallery',
 		icon: 'bi:images',
 		collections: [Posts]
 	}
