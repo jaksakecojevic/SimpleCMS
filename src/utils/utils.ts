@@ -1,36 +1,66 @@
 import fs from 'fs';
-import schemas from '../collections';
+import schemas, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import axios from 'axios';
+import { get } from 'svelte/store';
+import { entryValue, mode } from '@src/stores/store';
 
-// Export config object with headers for multipart/form-data Content-Type
+// Configuration object for axios requests
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
 	}
 };
 
-// Export obj2formData function that converts an object to a FormData instance
-export const obj2formData = (obj: any) => {
+// Converts data to FormData object
+// export const col2formData = async (getData: { [Key: string]: () => any }) => {
+// 	const formData = new FormData();
+// 	let data = {};
+// 	for (let key in getData) {
+// 		let value = await getData[key]();
+// 		if (!value) continue;
+// 		data[key] = value;
+// 	}
+// 	for (const key in data) {
+// 		if (data[key] instanceof FileList) {
+// 			for (let _key in data[key]) {
+// 				// for multiple files
+// 				console.log(data[key]);
+// 				formData.append(key, data[key][_key]);
+// 			}
+// 		} else if (typeof data[key] === 'object') {
+// 			formData.append(key, JSON.stringify(data[key]));
+// 		} else {
+// 			formData.append(key, data[key]);
+// 		}
+// 	}
+// 	if (!formData.entries().next().value) {
+// 		return null;
+// 	}
+// 	return formData;
+// };
+
+// Converts data to FormData object
+export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	const formData = new FormData();
-	for (const key in obj) {
-		if (obj[key] instanceof FileList) {
-			for (let _key in obj[key]) {
-				// for multiple files
-				// console.log(obj[key]);
-				formData.append(key, obj[key][_key]);
+	for (const [key, valueFn] of Object.entries(getData)) {
+		const value = await valueFn();
+		if (!value) continue;
+		if (value instanceof FileList) {
+			for (const file of Array.from(value)) {
+				formData.append(key, file);
 			}
-		} else if (typeof obj[key] === 'object') {
-			formData.append(key, JSON.stringify(obj[key]));
+		} else if (typeof value === 'object') {
+			formData.append(key, JSON.stringify(value));
 		} else {
-			formData.append(key, obj[key]);
+			formData.append(key, value);
 		}
 	}
-	return formData;
+	return formData.entries().next().value ? formData : null;
 };
 
-// Export saveFiles function that saves files from a FormData instance to the file system
+// Saves files to disk and returns file information
 export function saveFiles(data: FormData, collection: string) {
 	let files: any = {};
 	let _files: Array<any> = [];
@@ -58,7 +88,7 @@ export function saveFiles(data: FormData, collection: string) {
 // finds field title that matches the fieldname and returns that field
 function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
 	for (let field of schema.fields) {
-		// console.log('field is ', field.db_fieldName, field.label);
+		console.log('field is ', field.db_fieldName, field.label);
 		if (field.db_fieldName == fieldname || field.label == fieldname) {
 			found.val = true;
 
@@ -92,7 +122,7 @@ export function parse(obj: any) {
 	return obj;
 }
 
-// Export fieldsToSchema function that converts an array of fields to a schema object
+// Converts fields to schema object
 export let fieldsToSchema = (fields: Array<any>) => {
 	// removes widget, so it does not set up in db
 	let schema: any = {};
@@ -103,8 +133,31 @@ export let fieldsToSchema = (fields: Array<any>) => {
 	return schema;
 };
 
-// Export find function that performs an HTTP GET request to /api/find endpoint
+// Finds documents in collection that match query
 export async function find(query: object, collection: Schema) {
 	let _query = JSON.stringify(query);
 	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
+}
+
+// Returns field's database field name or label
+export function getFieldName(field: any) {
+	return (field?.db_fieldName || field?.label) as string;
+}
+
+// Saves FormData to database
+export async function saveFormData(data) {
+	let $mode = get(mode);
+	let $collection = get(collection);
+	let $entryValue = get(entryValue);
+	let formData = data instanceof FormData ? data : await col2formData(data);
+	if (!formData) return;
+	switch ($mode) {
+		case 'create':
+			await axios.post(`/api/${$collection.name}`, formData, config);
+			break;
+		case 'edit':
+			formData.append('_id', $entryValue._id);
+			await axios.patch(`/api/${$collection.name}`, formData, config);
+			break;
+	}
 }

@@ -2,6 +2,7 @@ import type { RequestHandler } from '../$types';
 import fs from 'fs';
 import sharp from 'sharp';
 import mongoose from 'mongoose';
+import mime from 'mime-types';
 
 export const GET: RequestHandler = async ({ params }) => {
 	const data = await fs.promises.readFile(`./media/${params.url}`);
@@ -23,5 +24,9 @@ export const GET: RequestHandler = async ({ params }) => {
 		}
 	});
 
-	return new Response(webpData);
+	return new Response(webpData, {
+		headers: {
+			'Content-Type': mime.lookup(params.url) as string
+		}
+	});
 };
