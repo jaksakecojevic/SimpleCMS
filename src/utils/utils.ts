@@ -3,19 +3,22 @@ import schemas from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import axios from 'axios';
+
+// Export config object with headers for multipart/form-data Content-Type
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
 	}
 };
 
+// Export obj2formData function that converts an object to a FormData instance
 export const obj2formData = (obj: any) => {
 	const formData = new FormData();
 	for (const key in obj) {
 		if (obj[key] instanceof FileList) {
 			for (let _key in obj[key]) {
 				// for multiple files
-				console.log(obj[key]);
+				// console.log(obj[key]);
 				formData.append(key, obj[key][_key]);
 			}
 		} else if (typeof obj[key] === 'object') {
@@ -27,6 +30,7 @@ export const obj2formData = (obj: any) => {
 	return formData;
 };
 
+// Export saveFiles function that saves files from a FormData instance to the file system
 export function saveFiles(data: FormData, collection: string) {
 	let files: any = {};
 	let _files: Array<any> = [];
@@ -54,7 +58,7 @@ export function saveFiles(data: FormData, collection: string) {
 // finds field title that matches the fieldname and returns that field
 function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
 	for (let field of schema.fields) {
-		console.log('field is ', field.db_fieldName, field.label);
+		// console.log('field is ', field.db_fieldName, field.label);
 		if (field.db_fieldName == fieldname || field.label == fieldname) {
 			found.val = true;
 
@@ -88,6 +92,7 @@ export function parse(obj: any) {
 	return obj;
 }
 
+// Export fieldsToSchema function that converts an array of fields to a schema object
 export let fieldsToSchema = (fields: Array<any>) => {
 	// removes widget, so it does not set up in db
 	let schema: any = {};
@@ -98,6 +103,7 @@ export let fieldsToSchema = (fields: Array<any>) => {
 	return schema;
 };
 
+// Export find function that performs an HTTP GET request to /api/find endpoint
 export async function find(query: object, collection: Schema) {
 	let _query = JSON.stringify(query);
 	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;

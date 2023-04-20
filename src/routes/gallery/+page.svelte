@@ -241,6 +241,7 @@
 <div class="flex items-center justify-center mt-2 gap-10 border-b border-gray-500 dark:text-white">
 	<!-- Display Grid / Table -->
 	<div class="mr-2 flex flex-col p-2 text-center text-xs">
+		Display
 		<div class="flex p-2 divide-x divide-gray-500">
 			<div
 				class="px-2"
@@ -253,7 +254,8 @@
 					}
 				}}
 			>
-				<iconify-icon icon="material-symbols:grid-view-rounded" height="40" style={`color: ${view === 'grid' ? 'white' : 'grey'}`} />Grid
+				<iconify-icon icon="material-symbols:grid-view-rounded" height="40" style={`color: ${view === 'grid' ? 'white' : 'grey'}`} />
+				<br />Grid
 			</div>
 			<div
 				class="px-2"
@@ -266,13 +268,15 @@
 					}
 				}}
 			>
-				<iconify-icon icon="material-symbols:list-alt-outline" height="40" style={`color: ${view === 'table' ? 'white' : 'grey'}`} />Table
+				<iconify-icon icon="material-symbols:list-alt-outline" height="40" style={`color: ${view === 'table' ? 'white' : 'grey'}`} />
+				<br />Table
 			</div>
 		</div>
 	</div>
 
 	<!-- switch between small, medium, and large images -->
 	<div class="mr-2 flex flex-col p-2 text-center text-xs">
+		Image Size
 		<div class=" flex p-2 divide-x divide-gray-500">
 			<div
 				class="px-2"
@@ -285,7 +289,8 @@
 					}
 				}}
 			>
-				<iconify-icon icon="material-symbols:background-grid-small-sharp" height="40" style={`color: ${size === 'small' ? 'white' : 'grey'}`} />Small
+				<iconify-icon icon="material-symbols:background-grid-small-sharp" height="40" style={`color: ${size === 'small' ? 'white' : 'grey'}`} />
+				<br />Small
 			</div>
 			<div
 				class="px-2"
@@ -298,7 +303,8 @@
 					}
 				}}
 			>
-				<iconify-icon icon="material-symbols:grid-on-sharp" height="40" style={`color: ${size === 'medium' ? 'white' : 'grey'}`} />Medium
+				<iconify-icon icon="material-symbols:grid-on-sharp" height="40" style={`color: ${size === 'medium' ? 'white' : 'grey'}`} />
+				<br />Medium
 			</div>
 			<div
 				class="px-2"
@@ -311,7 +317,7 @@
 					}
 				}}
 			>
-				<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: ${size === 'large' ? 'white' : 'grey'}`} />Large
+				<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: ${size === 'large' ? 'white' : 'grey'}`} /><br />Large
 			</div>
 		</div>
 	</div>

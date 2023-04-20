@@ -26,7 +26,8 @@
 		<Button on:click={() => mode.set('create')}>Create</Button>
 	{:else if ['edit', 'create'].includes($mode)}
 		<header>
-			<Button on:click={saveData}>Save</Button>
+			<!-- TODO: add margin to button -->
+			<Button on:click={saveData} btnClass="w-full">Save</Button>
 		</header>
 		<main class="text-white">
 			<h2 class="font-bold">Widget Area:</h2>

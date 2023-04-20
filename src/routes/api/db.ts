@@ -1,20 +1,41 @@
 import mongoose from 'mongoose';
-import env from '@root/env';
+
+import { DB_TYPE, DB_HOST_MONGO, DB_HOST_ATLAS, DB_NAME, DB_PASSWORD, DB_USER } from '$env/static/private';
+
 import schemas from '@src/collections';
 import lucia, { type Session, type User } from 'lucia-auth';
 import adapter from '@lucia-auth/adapter-mongoose';
 import { session, key, UserSchema } from '@src/collections/Auth';
 import { sveltekit } from 'lucia-auth/middleware';
 import { fieldsToSchema } from '@src/utils/utils';
-mongoose
-	.connect(env.DB_HOST, {
-		authSource: 'admin',
-		user: env.DB_USER,
-		pass: env.DB_PASSWORD,
-		dbName: env.DB_NAME
-	})
-	.then(() => console.log('---------------------connected-----------------------'));
+import { error } from '@sveltejs/kit';
+
+// Turn off strict mode for query filters. Default in Mongodb 7
 mongoose.set('strictQuery', false);
+
+// Turn off strict mode for query filters. Default in Mongodb 7
+mongoose.set('strictQuery', false);
+
+function connectToDatabase(dbHost) {
+	mongoose
+		.connect(dbHost, {
+			authSource: 'admin',
+			user: DB_USER,
+			pass: DB_PASSWORD,
+			dbName: DB_NAME
+		})
+		.then(() => console.log('----------------DB--connected-----------------------'))
+		.catch((err) => console.error(err));
+}
+// use for local mongodb connection
+if (DB_TYPE === 'mongodb') {
+	connectToDatabase(DB_HOST_MONGO);
+}
+// use for local mongodb atlas connection
+else if (DB_TYPE === 'atlas') {
+	connectToDatabase(DB_HOST_ATLAS);
+}
+
 let collections: { [Key: string]: mongoose.Model<any> } = {};
 
 for (let schema of schemas) {
@@ -34,7 +55,7 @@ for (let schema of schemas) {
 !mongoose.models['auth_user'] && mongoose.model('auth_user', new mongoose.Schema({ ...UserSchema }, { _id: false, timestamps: true }));
 const auth = lucia({
 	adapter: adapter(mongoose),
-	//for production & cloned dev environment
+	// for production & cloned dev environment
 	// env: dev ? "DEV" : "PROD",
 	env: 'DEV',
 

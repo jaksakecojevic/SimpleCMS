@@ -8,6 +8,8 @@
 	import Fields from '@src/components/Fields.svelte';
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
+
+	// Perform HTTP POST request to /api/auth endpoint on mount
 	onMount(() => {
 		axios
 			.post(

@@ -1,20 +1,80 @@
+<!-- 
+This FloatingInput component has the following properties:
+
+- type: The type of the input element. Can be either 'text' or 'password'.
+- value: The value of the input element.
+- label: The text to display in the floating label.
+- icon: The icon to display next to the input element.
+- labelClass: Additional classes to apply to the label element.
+- inputClass: Additional classes to apply to the input element.
+- error: The error message to display. Can be either a string or a function that returns a string.
+- name: The name of the input element.
+- required: Whether the input is required. Defaults to false.
+- disabled: Whether the input is disabled. Defaults to false.
+- minlength: The minimum length of the input value.
+- maxlength: The maximum length of the input value.
+- onInput: A callback function that is called when the input value changes.
+ -->
+
 <script lang="ts">
-	export let type: 'text' | 'password' = 'text';
-	export let value = '';
-	export let label = '';
-	export let icon = '';
-	export let labelClass = '';
-	export let inputClass = '';
-	export let error = '';
-	export let name = '';
-	export let required = false;
-	export let placeholder = '';
-	export let disabled = false;
-	export let minlength: number | undefined;
-	export let maxlength: number | undefined;
-	export let onInput: (value: string) => void;
+	// Define an interface for the input properties
+	interface InputProps {
+		disabled?: boolean;
+		// error?: string | (() => string);
+		icon?: string;
+		iconColor?: string;
+		inputClass?: string;
+		label?: string;
+		labelClass?: string;
+		maxlength?: number;
+		minlength?: number;
+		name?: string;
+		onInput?: (value: string) => void;
+		required?: boolean;
+		showPasswordBackgroundColor?: 'light' | 'dark';
+		textColor?: string;
+		type?: 'text' | 'password';
+		value?: string;
+	}
+
+	export let disabled: InputProps['disabled'] = false;
+	// export let error: InputProps['error'] = () => `${label} is required`;
+	export let icon: InputProps['icon'] = '';
+	export let iconColor: InputProps['iconColor'] = 'gray-500';
+
+	export let inputClass: InputProps['inputClass'] = '';
+	export let label: InputProps['label'] = '';
+	export let labelClass: InputProps['labelClass'] = '';
+	export let minlength: InputProps['minlength'] = undefined;
+	export let maxlength: InputProps['maxlength'] = undefined;
+	export let name: InputProps['name'] = '';
+	export let onInput: InputProps['onInput'] = (value) => {};
+	export let required: InputProps['required'] = false;
+	export let showPasswordBackgroundColor: InputProps['showPasswordBackgroundColor'] = 'light';
+	export let textColor: InputProps['textColor'] = '!text-red-500';
+	export let type: InputProps['type'] = 'text';
+	export let value: InputProps['value'] = '';
+
+	function getAutocompleteValue(label: string | undefined): string {
+		if (label === undefined) {
+			return '';
+		}
+		const normalizedLabel = label.toLowerCase().replace(/\s+/g, '');
+		// Add checks for other types of labels here
+		return '';
+	}
+	export let id: string = getIdValue(label);
+
+	function getIdValue(label: string | undefined): string {
+		if (label === undefined) {
+			return '';
+		}
+		return label.toLowerCase().replace(/\s+/g, '-');
+	}
+	export let autocomplete: string = getAutocompleteValue(label);
 
 	export let showPassword = false;
+
 	const togglePasswordVisibility = () => {
 		showPassword = !showPassword;
 	};
@@ -25,44 +85,52 @@
 	};
 </script>
 
-<div>
-	<div class="group relative z-0 mb-6 w-full">
+<div class="py-2">
+	<div class="group relative w-full">
 		<input
 			type={showPassword ? 'text' : type}
 			on:input={handleInput}
-			id="input"
-			class="{inputClass} peer block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-gray-300 !bg-transparent py-2.5 px-6 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+			{id}
+			{autocomplete}
+			class="{inputClass} peer relative block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-gray-300 !bg-transparent !text-{textColor} focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-400 dark:focus:border-blue-500 left-5"
 			{value}
 			{name}
 			{required}
-			{placeholder}
 			{disabled}
-			{minlength}
-			{maxlength}
+			{...minlength !== undefined && { minlength }}
+			{...maxlength !== undefined && { maxlength }}
+			{...autocomplete && { autocomplete }}
 		/>
 
 		{#if icon}
-			<iconify-icon {icon} width="18" class="absolute top-2 left-0 text-gray-400" />
+			<iconify-icon {icon} width="18" class="absolute top-3 left-0 text-{iconColor}" />
+		{/if}
+
+		{#if type === 'password'}
+			<iconify-icon
+				icon={showPassword ? 'bi:eye-fill' : 'bi:eye-slash-fill'}
+				class={`absolute -right-4 ${showPasswordBackgroundColor === 'light' ? 'text-gray-700' : 'text-gray-300'}`}
+				width="24"
+				on:click|preventDefault={togglePasswordVisibility}
+			/>
 		{/if}
 
 		{#if label}
 			<label
 				for="input"
-				class="{labelClass} absolute left-5 -top-6.5 text-gray-600 text-sm pointer-events-none transform transition-all duration-200 ease-in-out peer-focus:-top-6 peer-focus:text-blue-600 peer-placeholder-shown:text-sm peer-placeholder-shown:-top-3.5"
+				class="{labelClass} absolute left-5 text-gray-400 text-sm pointer-events-none transform transition-all duration-200 ease-in-out peer-focus:-top-3 peer-focus:-left-0 peer-focus:text-blue-600 peer-focus:text-xs peer-placeholder-shown:text-base peer-placeholder-shown:-top-2 peer-placeholder-shown:text-gray-400 {value &&
+					'-top-3 -left-0 text-blue-600 text-xs'}"
 			>
 				{label}
+				{#if required}
+					<span class="text-red-500">*</span>
+				{/if}
 			</label>
 		{/if}
 
-		<!-- {#if type === 'password'}
-			<div class="absolute top-0 -right-2" on:click|preventDefault={togglePasswordVisibility}>
-				<iconify-icon icon={showPassword ? 'bi:eye-fill' : 'bi:eye-slash-fill'} class="text-gray-500" width="24" />
-			</div>
+		<!-- {#if error}
+			<div class="absolute top-[2.4em] left-0 text-xs text-red-500">{typeof error === 'function' ? error() : error}</div>
 		{/if} -->
-
-		{#if error}
-			<div class="absolute top-8 left-0 text-xs text-red-500">{error}</div>
-		{/if}
 	</div>
 </div>
 
@@ -73,16 +141,5 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-	}
-	label {
-		margin-right: 10px;
-	}
-	input {
-		border: 1px solid #242728;
-		border-radius: 6px;
-		padding: 5px;
-		color: black;
-		padding-right: 18px;
-		outline-color: #65caec;
 	}
 </style>

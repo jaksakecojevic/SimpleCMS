@@ -16,15 +16,21 @@
 	export let forgot = false;
 	export let resetPW = false;
 
-	// zod validation Forgotton Password
-	import z from 'zod';
-	const forgotPasswordSchema = z.object({
-		forgottonemail: z.string({ required_error: 'Email is required' }).email({ message: 'Email must be a valid email' })
-	});
+	// Superforms integration with zod validation on client
+	import type { PageData } from '../$types';
+	import { superForm } from 'sveltekit-superforms/client';
+
+	// for debugging only
+	// import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
+
+	export let data: PageData;
+
+	// Client AP
+	//const { form, errors, enhance } = superForm(data.form);
 
 	let isLoading = false;
-
 	let form: HTMLDivElement;
+
 	let email = '';
 	let password = '';
 	let forgottonemail = '';
@@ -37,9 +43,6 @@
 	}
 
 	let showPassword = false;
-	const handlePasswordInput = (value: string) => {
-		console.log('Password:', value);
-	};
 
 	async function signup() {
 		let resp = (
@@ -53,6 +56,7 @@
 				}
 			)
 		).data;
+
 		if (resp.status == 200) {
 			$credentials = resp;
 			goto('/');
@@ -61,7 +65,32 @@
 			setTimeout(() => form.classList.remove('wiggle'), 300);
 		}
 	}
+
+	async function forgotten() {
+		let resetPW = true;
+		let resp = (
+			await axios.post(
+				`/api/auth`,
+				{ email, password, authType: 'forgotten' },
+				{
+					headers: {
+						'content-type': 'multipart/form-data'
+					}
+				}
+			)
+		).data;
+
+		if (resp.status == 200) {
+			$credentials = resp;
+			goto('/reset');
+		} else {
+			form.classList.add('wiggle');
+			setTimeout(() => form.classList.remove('wiggle'), 300);
+		}
+	}
 </script>
+
+<!-- <SuperDebug data={$form} /> -->
 
 <section
 	on:click
@@ -71,41 +100,111 @@
 	class:inactive={active !== undefined && active !== 0}
 	class:hover={active == undefined || active == 1}
 >
-	<div bind:this={form} class="flex flex-col items-center w-full" class:hide={active != 0}>
-		<div class="mb-8 flex flex-row gap-2">
-			<CMSLogo className="w-14" fill="red" />
+	<div bind:this={form} class="mx-auto mt-[15%] mb-[5%] w-full p-4 lg:w-1/2" class:hide={active != 0}>
+		<div class="mb-1 flex flex-row gap-2">
+			<CMSLogo className="w-12" fill="red" />
+
 			<h1 class="text-2xl font-bold text-black lg:text-3xl">
 				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
-				<div class="-mt-1">{$LL.LOGIN_SignIn()}</div>
+				{#if !forgot}
+					<div class="-mt-1">{$LL.LOGIN_SignIn()}</div>
+				{:else if forgot}
+					<div class="-mt-1">{$LL.LOGIN_ForgottenPassword()}</div>
+				{:else}
+					<div class="-mt-1">{$LL.LOGIN_ResetPassword()}</div>
+				{/if}
 			</h1>
 		</div>
-		<div class="-mt-2 mb-2 text-xs text-right text-red-500">{$LL.LOGIN_Required()}</div>
+		<div class="-mt-2 text-xs text-right text-red-500">{$LL.LOGIN_Required()}</div>
 
-		{#if !forgot && !resetPW}
-			<!-- Email field -->
-			<FloatingInput type="text" bind:value={email} label={$LL.LOGIN_EmailAddress()} icon="mdi:email" />
+		<!-- <form method="POST" use:enhance> -->
+		<form action="">
+			{#if !forgot && !resetPW}
+				<!-- Email field -->
+				<FloatingInput type="text" bind:value={email} required label={$LL.LOGIN_EmailAddress()} icon="mdi:email" iconColor="black" />
+				<!-- <FloatingInput type="text" bind:value={$form.email} required label={$LL.LOGIN_EmailAddress()} icon="mdi:email" iconColor="black" />
+				{#if $errors.email}
+					<small>{$errors.email}</small>
+				{/if} -->
 
-			<!-- Password field -->
-			<FloatingInput
-				type="password"
-				bind:value={password}
-				label={$LL.LOGIN_Password()}
-				icon="mdi:lock"
-				bind:showPassword
-				onInput={handlePasswordInput}
-			/>
+				<!-- Password field -->
+				<FloatingInput
+					type="password"
+					required
+					bind:value={password}
+					bind:showPassword
+					label={$LL.LOGIN_Password()}
+					icon="mdi:lock"
+					iconColor="black"
+				/>
+				<!-- <FloatingInput
+					type="password"
+					required
+					bind:value={$form.password}
+					bind:showPassword
+					label={$LL.LOGIN_Password()}
+					icon="mdi:lock"
+					iconColor="black"
+					
+				/>
+				{#if $errors.password}
+					<small>{$errors.password}</small>
+				{/if} -->
 
-			<div class="mt-10">
-				<Button backgroundColor="black" btnClass="mr-10" on:click={signup}>{$LL.LOGIN_SignIn()}</Button>
+				<div class="mt-10">
+					<Button backgroundColor="black" btnClass="mt-6 ml-2" on:click={signup}>{$LL.LOGIN_SignIn()}</Button>
+
+					<Button
+						backgroundColor="black"
+						on:click={() => {
+							forgot = true;
+							resetPW = false;
+						}}>{$LL.LOGIN_ForgottenPassword()}</Button
+					>
+				</div>
+			{:else if resetPW && forgot}
+				<!-- Reset Password -->
+
+				<!-- Password field -->
+				<FloatingInput
+					type="password"
+					required
+					bind:value={password}
+					bind:showPassword
+					label={$LL.LOGIN_Password()}
+					icon="mdi:lock"
+					iconColor="black"
+				/>
+				<!-- Password field -->
+				<FloatingInput
+					type="password"
+					required
+					bind:value={password}
+					bind:showPassword
+					label={$LL.LOGIN_ConfirmPassword()}
+					icon="mdi:lock"
+					iconColor="black"
+				/>
+
+				<!-- Password field -->
+				<FloatingInput type="password" required bind:value={password} bind:showPassword label={$LL.LOGIN_Token()} icon="mdi:lock" iconColor="black" />
+				<Button backgroundColor="black" btnClass="mt-6 ml-2" on:click={signup}>{$LL.LOGIN_ResetPasswordSave()}</Button>
+			{:else}
+				<!-- Forgotten Password -->
+
+				<!-- Email field -->
+				<FloatingInput type="text" bind:value={email} required label={$LL.LOGIN_EmailAddress()} icon="mdi:email" iconColor="black" />
+				<Button backgroundColor="black" btnClass="mt-6 ml-2" on:click={forgotten}>{$LL.LOGIN_SendResetMail()}</Button>
 				<Button
 					backgroundColor="black"
+					btnClass="circular-btn mt-6 ml-2"
+					iconLeft="mdi:arrow-left-circle"
 					on:click={() => {
-						forgot = true;
+						forgot = false;
 						resetPW = false;
-					}}>{$LL.LOGIN_ForgottenPassword()}</Button
-				>
-			</div>
-		{:else if resetPW && !forgot}{/if}
+					}}
+				/>{/if}
+		</form>
 	</div>
 	<SigninIcon show={active == 1 || active == undefined} />
 </section>

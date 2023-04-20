@@ -14,40 +14,17 @@
 	export let active: undefined | 0 | 1 = undefined;
 	export let firstUserExists = false;
 
-	// zod validation Forgotton Password
-	import z from 'zod';
+	// Superforms integration with zod validation on client
+	import type { PageData } from '../$types';
+	import { superForm } from 'sveltekit-superforms/client';
 
-	let errorStatus: Record<string, { status: boolean; msg: string }> = {
-		general: { status: false, msg: '' },
-		username: { status: false, msg: '' },
-		email: { status: false, msg: '' },
-		password: { status: false, msg: '' },
-		confirm_password: { status: false, msg: '' },
-		token: { status: false, msg: '' },
-		terms: { status: false, msg: '' }
-	};
+	// for debugging only
+	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
-	// const zod_obj: Record<string, z.ZodString> = {
-	// 	username: z
-	// 		.string({ required_error: get(LL).LOGIN_ZOD_Username_string() })
-	// 		.regex(/^[a-zA-Z0-9@$!%*#]+$/, { message: get(LL).LOGIN_ZOD_Username_regex() })
-	// 		.min(2, { message: get(LL).LOGIN_ZOD_Username_min() })
-	// 		.max(24, { message: get(LL).LOGIN_ZOD_Username_max() })
-	// 		.trim(),
-	// 	email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() }),
-	// 	password: z
-	// 		.string({ required_error: get(LL).LOGIN_ZOD_Password_string() })
-	// 		.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-	// 			message: get(LL).LOGIN_ZOD_Password_regex()
-	// 		}),
-	// 	confirm_password: z
-	// 		.string({ required_error: get(LL).LOGIN_ZOD_Confirm_password_string() })
-	// 		.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-	// 			message: get(LL).LOGIN_ZOD_Confirm_password_regex()
-	// 		}),
-	// 	token: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1)
-	// 	// terms: z.boolean({ required_error: 'Confirm Terms' })
-	// };
+	//export let data: PageData;
+
+	// Client API:
+	//const { form, errors, enhance } = superForm(data.form);
 
 	let isLoading = false;
 	let form: HTMLDivElement;
@@ -80,9 +57,13 @@
 				}
 			)
 		).data;
+
 		if (resp.status == 200) {
-			credentials.set(resp);
+			$credentials = resp;
 			goto('/');
+		} else {
+			form.classList.add('wiggle');
+			setTimeout(() => form.classList.remove('wiggle'), 300);
 		}
 	}
 </script>
@@ -95,55 +76,53 @@
 	class:inactive={active !== undefined && active !== 1}
 	class:hover={active == undefined || active == 0}
 >
-	<div class="flex flex-col items-center justify-center w-full" class:hide={active != 1}>
-		<div class="mb-8 flex flex-row gap-2">
-			<CMSLogo className="w-14" fill="red" />
+	<div bind:this={form} class="mx-auto mt-[15%] mb-[5%] w-full p-4 lg:w-1/2" class:hide={active != 1}>
+		<div class="mb-1 flex flex-row gap-2">
+			<CMSLogo className="w-12" fill="red" />
+
 			<h1 class="text-2xl font-bold text-white lg:text-3xl">
 				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
 				<div class="-mt-1">{$LL.LOGIN_SignUp()}</div>
 			</h1>
 		</div>
-		<div class="-mt-2 mb-2 text-xs text-right text-red-500">{$LL.LOGIN_Required()}</div>
+		<div class="-mt-2 text-xs text-right text-red-500">{$LL.LOGIN_Required()}</div>
 
-		<!-- Username field -->
-		<FloatingInput type="text" bind:value={username} label={$LL.LOGIN_Username()} icon="mdi:user-circle" />
+		<form action="">
+			<!-- Username field -->
+			<FloatingInput type="text" required bind:value={username} label={$LL.LOGIN_Username()} icon="mdi:user-circle" iconColor="white" />
 
-		<FloatingInput type="text" bind:value={email} label={$LL.LOGIN_EmailAddress()} icon="mdi:email" error="Error: No Email" labelClass="text-white" />
+			<FloatingInput type="text" required bind:value={email} label={$LL.LOGIN_EmailAddress()} icon="mdi:email" iconColor="white" />
 
-		<!-- Password field -->
-		<FloatingInput
-			type="password"
-			bind:value={password}
-			label={$LL.LOGIN_Password()}
-			icon="mdi:password"
-			error="Error: No Password"
-			labelClass="text-white"
-		/>
-
-		<!-- Password Confirm -->
-		<FloatingInput
-			type="password"
-			bind:value={password}
-			label={$LL.LOGIN_ConfirmPassword()}
-			icon="mdi:password"
-			error="Error: No Password"
-			labelClass="text-white"
-		/>
-
-		<!-- Registration Token -->
-		{#if firstUserExists}
+			<!-- Password field -->
 			<FloatingInput
 				type="password"
+				required
 				bind:value={password}
-				label={$LL.LOGIN_Token()}
-				icon="mdi:key-chain"
-				error="Error: No Password"
-				labelClass="text-white"
+				label={$LL.LOGIN_Password()}
+				icon="mdi:password"
+				iconColor="white"
+				showPasswordBackgroundColor="dark"
 			/>
-		{/if}
 
-		<Button backgroundColor="white" btnClass="mt-10" on:click={signup}>{$LL.LOGIN_SignUp()}</Button>
+			<!-- Password Confirm -->
+			<FloatingInput
+				type="password"
+				required
+				bind:value={password}
+				label={$LL.LOGIN_ConfirmPassword()}
+				icon="mdi:password"
+				iconColor="white"
+				showPasswordBackgroundColor="dark"
+			/>
+			<!-- Registration Token -->
+			{#if firstUserExists}
+				<FloatingInput type="password" bind:value={password} label={$LL.LOGIN_Token()} icon="mdi:key-chain" iconColor="white" />
+			{/if}
+
+			<Button backgroundColor="white" btnClass="mt-6 ml-2" on:click={signup}>{$LL.LOGIN_SignUp()}</Button>
+		</form>
 	</div>
+
 	<SignupIcon show={active == 0 || active == undefined} />
 </section>
 
