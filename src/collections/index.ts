@@ -22,6 +22,6 @@ let categories = [
 	}
 ];
 export { categories };
-let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+let collections = categories.map((x) => x.collections).reduce((x, acc) => [].concat(x, acc)); // returns all collections
 export default collections;
 export let collection = writable(collections?.[0]); // current collection

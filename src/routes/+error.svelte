@@ -38,20 +38,21 @@
 				class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rotate-12 mx-auto text-center rounded-md bg-red-600/80 px-2 text-sm font-bold text-white whitespace-nowrap"
 			>
 				<div class="">{$page.url}</div>
-				<div class="flex-nowrap whitespace-nowrap">{$LL.ERROR_Pagenotfound()}</div>
+				<!-- TODO: i18n error is not working -->
+				<div class="flex-nowrap whitespace-nowrap">{$LL.ERROR_Pagenotfound()} i18n use</div>
 			</div>
 		</div>
 
 		<h1 class="text-5xl font-extrabold tracking-widest text-gray-400">
 			{#if $page.error} {$page.error.message} {/if}
 		</h1>
-
-		<p class="text-lg text-white">{$LL.ERROR_Wrong()}</p>
+		<!-- TODO: i18n error is not working -->
+		<p class="text-lg text-white">{$LL.ERROR_Wrong()} i18n use</p>
 		<a
 			href="/"
 			data-sveltekit-preload-data="tap"
 			class="relative mt-5 block rounded-full bg-gradient-to-br from-red-700 via-red-600 to-red-700 px-8 py-4 font-bold uppercase !text-white shadow-xl"
-			>{$LL.ERROR_GoHome()}</a
+			>{$LL.ERROR_GoHome()} i18n use</a
 		>
 	</main>
 {/if}

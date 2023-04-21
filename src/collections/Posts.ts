@@ -3,7 +3,12 @@ let schema = {
 	name: 'posts1',
 	fields: [
 		widgets.Text({
-			label: 'text',
+			label: 'test',
+			db_fieldName: 'dbtest',
+			required: true,
+			icon: 'ri:t-box-line',
+			placeholder: 'Enter Test Placeholder',
+			localization: true,
 			display: async (data, field, entry) => {
 				return data;
 			}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { FieldType } from './';
 
-	import Input from '@src/components/system/inputs/Input.svelte';
+	import Input from '@src/components/system/inputs/input.svelte';
 	import { mode, entryValue } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 	export let field: FieldType | undefined;
