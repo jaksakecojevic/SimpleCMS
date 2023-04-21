@@ -20,7 +20,7 @@
 </script>
 
 <section class="relative bg-gray-800 pt-2 w-[225px] px-1 flex flex-col h-screen">
-	<header class="flex flex-col text-center">
+	<header class="flex flex-col text-center dark:text-white">
 		{#if !switchSideBar}
 			<AnimatedHamburger />
 		{/if}
@@ -112,18 +112,24 @@
 				<iconify-icon icon="uil:signout" width="24" />
 			</div>
 
-			<!-- Github discussions -->
-			<div class="{switchSideBar ? 'order-5  ml-2 mt-2' : 'order-5 hidden'} ">
-				<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
-					<iconify-icon icon="mdi:comment-help" width="26" />
-				</a>
-			</div>
+			<div
+				class="{switchSideBar
+					? 'order-5 col-span-3'
+					: 'order-5  col-span-2'}  mt-1 mx-auto w-full flex justifiy-center items-center bg-gray-600/30 rounded"
+			>
+				<!-- Github discussions -->
+				<div class="{switchSideBar ? 'ml-2 mt-2' : 'hidden'} ">
+					<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
+						<iconify-icon icon="mdi:comment-help" width="26" />
+					</a>
+				</div>
 
-			<!-- CMS Version -->
-			<div class="{switchSideBar ? 'order-6 ' : 'order-6  '} col-span-2 mx-auto">
-				<a href="https://github.com/Rar9/SimpleCMS/" target="blank">
-					<Badges text={`${switchSideBar ? 'Version: ' : ''}${pkg}`} color="primary" />
-				</a>
+				<!-- CMS Version -->
+				<div class="col-span-2 mx-auto">
+					<a href="https://github.com/Rar9/SimpleCMS/" target="blank">
+						<Badges text={`${switchSideBar ? 'Version: ' : ''}${pkg}`} color="primary" />
+					</a>
+				</div>
 			</div>
 		</div>
 	</footer>

@@ -9,7 +9,7 @@
 
 	let sizeClasses: { [key: string]: string } = {
 		xs: 'px-1 py-1 text-xs',
-		sm: 'px-2 py-1 text-sm',
+		sm: 'px-3 py-2 text-sm',
 		base: 'px-4 py-2 text-base',
 		lg: 'px-6 py-3 text-lg',
 		xl: 'px-8 py-4 text-xl'
@@ -54,9 +54,8 @@
 	button {
 		background-color: var(--backgroundColor);
 		color: var(--textColor);
-		border: none;
 		text-align: center;
-		border-radius: 4px;
+		border-radius: 6px;
 		transition: background-color 0.2s ease-in-out;
 		user-select: none;
 	}

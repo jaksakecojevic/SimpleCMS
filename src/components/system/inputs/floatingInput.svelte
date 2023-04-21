@@ -92,7 +92,7 @@ This FloatingInput component has the following properties:
 			on:input={handleInput}
 			{id}
 			{autocomplete}
-			class="{inputClass} peer relative block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-gray-300 !bg-transparent !text-{textColor} focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-400 dark:focus:border-blue-500 left-5"
+			class="{inputClass} peer relative block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-gray-300 !bg-transparent pl-6 !text-{textColor} focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-400 dark:focus:border-blue-500"
 			{value}
 			{name}
 			{required}
@@ -103,13 +103,13 @@ This FloatingInput component has the following properties:
 		/>
 
 		{#if icon}
-			<iconify-icon {icon} width="18" class="absolute top-3 left-0 text-{iconColor}" />
+			<iconify-icon {icon} width="18" class="absolute top-3 text-{iconColor}" />
 		{/if}
 
 		{#if type === 'password'}
 			<iconify-icon
 				icon={showPassword ? 'bi:eye-fill' : 'bi:eye-slash-fill'}
-				class={`absolute -right-4 ${showPasswordBackgroundColor === 'light' ? 'text-gray-700' : 'text-gray-300'}`}
+				class={`absolute right-0 ${showPasswordBackgroundColor === 'light' ? 'text-gray-700' : 'text-gray-300'}`}
 				width="24"
 				on:click|preventDefault={togglePasswordVisibility}
 			/>
@@ -118,7 +118,7 @@ This FloatingInput component has the following properties:
 		{#if label}
 			<label
 				for="input"
-				class="{labelClass} absolute left-5 text-gray-400 text-sm pointer-events-none transform transition-all duration-200 ease-in-out peer-focus:-top-3 peer-focus:-left-0 peer-focus:text-blue-600 peer-focus:text-xs peer-placeholder-shown:text-base peer-placeholder-shown:-top-2 peer-placeholder-shown:text-gray-400 {value &&
+				class="{labelClass} absolute left-6 text-gray-400 text-sm pointer-events-none transform transition-all duration-200 ease-in-out peer-focus:-top-3 peer-focus:-left-0 peer-focus:text-blue-600 peer-focus:text-xs peer-placeholder-shown:text-base peer-placeholder-shown:-top-2 peer-placeholder-shown:text-gray-400 {value &&
 					'-top-3 -left-0 text-blue-600 text-xs'}"
 			>
 				{label}

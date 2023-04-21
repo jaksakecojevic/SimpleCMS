@@ -9,6 +9,34 @@
 	}
 </script>
 
+<!-- Mobile Top Sidebar -->
+<!-- <div class="container-top">
+	Top Sidebar
+ {#if $mode == 'view'}
+		<Button on:click={() => mode.set('create')}>Create</Button>
+	{:else if ['edit', 'create'].includes($mode)}
+		<header>
+					<Button on:click={saveData} btnClass="w-full">Save</Button>
+		</header>
+	{/if}
+</div> -->
+<!-- Mobile Footer Sidebar -->
+
+<!-- <div class="container-footer">
+	Footer Sidebar
+	{#if ['edit', 'create'].includes($mode)}
+		<footer class="text-white">
+			<h2 class="font-bold text-center">Content Info:</h2>
+			<div class="footer-content">
+				<div><span>Created:</span><span>16.04.2023</span></div>
+				<div><span>Updated:</span><span>17.04.2023</span></div>
+				<div><span>Revisions:</span><span>2</span></div>
+			</div>
+		</footer>
+	{/if}
+</div> -->
+
+<!-- Desktop Right Sidebar -->
 <div class="container pt-2">
 	{#if $mode == 'view'}
 		<Button on:click={() => mode.set('create')}>Create</Button>
@@ -41,6 +69,21 @@
 		height: 100vh;
 		background-color: #242734;
 	}
+
+	/* .container-top {
+		display: block;
+		width: 100%;
+		height: 150px;
+		background-color: red;
+	}
+
+	.container-footer {
+		display: block;
+		width: 100%;
+		height: 100px;
+		background-color: yellow;
+	} */
+
 	header {
 		flex: 0 0 auto;
 		text-align: center;

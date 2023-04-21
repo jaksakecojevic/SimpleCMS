@@ -80,19 +80,27 @@
 		<div class="mb-1 flex flex-row gap-2">
 			<CMSLogo className="w-12" fill="red" />
 
-			<h1 class="text-2xl font-bold text-white lg:text-3xl">
+			<h1 class="text-3xl font-bold text-white lg:text-4xl">
 				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
-				<div class="-mt-1">{$LL.LOGIN_SignUp()}</div>
+				<div class="lg:-mt-1">{$LL.LOGIN_SignUp()}</div>
 			</h1>
 		</div>
 		<div class="-mt-2 text-xs text-right text-red-500">{$LL.LOGIN_Required()}</div>
 
 		<form action="">
 			<!-- Username field -->
-			<FloatingInput type="text" required bind:value={username} label={$LL.LOGIN_Username()} icon="mdi:user-circle" iconColor="white" />
+			<FloatingInput
+				type="text"
+				required
+				bind:value={username}
+				label={$LL.LOGIN_Username()}
+				icon="mdi:user-circle"
+				iconColor="white"
+				textColor="white"
+			/>
 
-			<FloatingInput type="text" required bind:value={email} label={$LL.LOGIN_EmailAddress()} icon="mdi:email" iconColor="white" />
-
+			<FloatingInput type="text" required bind:value={email} label={$LL.LOGIN_EmailAddress()} icon="mdi:email" iconColor="white" textColor="white" />
+			<!-- TODO Check PW & Check to show hide PW together and have matiching PW -->
 			<!-- Password field -->
 			<FloatingInput
 				type="password"
@@ -101,6 +109,7 @@
 				label={$LL.LOGIN_Password()}
 				icon="mdi:password"
 				iconColor="white"
+				textColor="white"
 				showPasswordBackgroundColor="dark"
 			/>
 
@@ -112,11 +121,12 @@
 				label={$LL.LOGIN_ConfirmPassword()}
 				icon="mdi:password"
 				iconColor="white"
+				textColor="white"
 				showPasswordBackgroundColor="dark"
 			/>
 			<!-- Registration Token -->
 			{#if firstUserExists}
-				<FloatingInput type="password" bind:value={password} label={$LL.LOGIN_Token()} icon="mdi:key-chain" iconColor="white" />
+				<FloatingInput required type="text" bind:value={token} label={$LL.LOGIN_Token()} icon="mdi:key-chain" iconColor="white" textColor="white" />
 			{/if}
 
 			<Button backgroundColor="white" btnClass="mt-6 ml-2" on:click={signup}>{$LL.LOGIN_SignUp()}</Button>

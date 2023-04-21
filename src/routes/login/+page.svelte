@@ -8,11 +8,18 @@
 
 	let active: undefined | 0 | 1 = undefined;
 	let background: 'white' | '#242728' = 'white';
+
+	// export let data: PageData;
+	// import type { PageData } from './$types';
+	// const { firstUserExists } = data;
+
+	let firstUserExists = true;
 </script>
 
 <div class="body" style="background:{background} ">
+	<!-- TODO: Really hide icon if not displayed and adjust z-index so it doesnt enter form -->
 	<SignIn {active} on:click={() => (active = 0)} on:pointerenter={() => (background = '#242728')} />
-	<SignUp {active} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} />
+	<SignUp {active} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} {firstUserExists} />
 	{#if active == undefined}
 		<!-- CSS Logo -->
 		<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform flex items-center justify-center">

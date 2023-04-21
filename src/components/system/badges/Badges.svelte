@@ -4,7 +4,7 @@
 	export let width = 'w-auto';
 </script>
 
-<span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-${color}-100 text-${color}-800 ${width}`}>
+<span class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-${color}-100 text-${color}-800 ${width}`}>
 	{text}
 </span>
 

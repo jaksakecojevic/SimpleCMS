@@ -104,14 +104,14 @@
 		<div class="mb-1 flex flex-row gap-2">
 			<CMSLogo className="w-12" fill="red" />
 
-			<h1 class="text-2xl font-bold text-black lg:text-3xl">
+			<h1 class="text-3xl font-bold text-black lg:text-4xl">
 				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
 				{#if !forgot}
-					<div class="-mt-1">{$LL.LOGIN_SignIn()}</div>
+					<div class="lg:-mt-1">{$LL.LOGIN_SignIn()}</div>
 				{:else if forgot}
-					<div class="-mt-1">{$LL.LOGIN_ForgottenPassword()}</div>
+					<div class="lg:-mt-1 text-2xl lg:text-4xl">{$LL.LOGIN_ForgottenPassword()}</div>
 				{:else}
-					<div class="-mt-1">{$LL.LOGIN_ResetPassword()}</div>
+					<div class="lg:-mt-1">{$LL.LOGIN_ResetPassword()}</div>
 				{/if}
 			</h1>
 		</div>
@@ -151,11 +151,13 @@
 					<small>{$errors.password}</small>
 				{/if} -->
 
-				<div class="mt-10">
+				<div>
 					<Button backgroundColor="black" btnClass="mt-6 ml-2" on:click={signup}>{$LL.LOGIN_SignIn()}</Button>
 
 					<Button
-						backgroundColor="black"
+						backgroundColor="white"
+						size="sm"
+						btnClass="ml-5 border border-black !rounded-lg"
 						on:click={() => {
 							forgot = true;
 							resetPW = false;
