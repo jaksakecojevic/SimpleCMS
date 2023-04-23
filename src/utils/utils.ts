@@ -14,34 +14,6 @@ export const config = {
 };
 
 // Converts data to FormData object
-// export const col2formData = async (getData: { [Key: string]: () => any }) => {
-// 	const formData = new FormData();
-// 	let data = {};
-// 	for (let key in getData) {
-// 		let value = await getData[key]();
-// 		if (!value) continue;
-// 		data[key] = value;
-// 	}
-// 	for (const key in data) {
-// 		if (data[key] instanceof FileList) {
-// 			for (let _key in data[key]) {
-// 				// for multiple files
-// 				console.log(data[key]);
-// 				formData.append(key, data[key][_key]);
-// 			}
-// 		} else if (typeof data[key] === 'object') {
-// 			formData.append(key, JSON.stringify(data[key]));
-// 		} else {
-// 			formData.append(key, data[key]);
-// 		}
-// 	}
-// 	if (!formData.entries().next().value) {
-// 		return null;
-// 	}
-// 	return formData;
-// };
-
-// Converts data to FormData object
 export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	const formData = new FormData();
 	for (const [key, valueFn] of Object.entries(getData)) {
@@ -85,21 +57,27 @@ export function saveFiles(data: FormData, collection: string) {
 	return files;
 }
 
-// finds field title that matches the fieldname and returns that field
-function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
+// Finds field title that matches the fieldname and returns that field
+function _findFieldByTitle(schema: any, fieldname: string): any {
+	let found = false;
+	let result;
 	for (let field of schema.fields) {
-		console.log('field is ', field.db_fieldName, field.label);
 		if (field.db_fieldName == fieldname || field.label == fieldname) {
-			found.val = true;
-
-			return field;
+			found = true;
+			result = field;
+			break;
 		} else if (field.fields && field.fields.length > 0) {
-			return _findFieldByTitle(field, fieldname, found);
+			result = _findFieldByTitle(field, fieldname);
+			if (result) {
+				found = true;
+				break;
+			}
 		}
 	}
 	if (!found) {
-		throw new Error('FIELD NOT FOUND');
+		throw new Error(`Field '${fieldname}' not found in '${schema.name}' schema.`);
 	}
+	return result;
 }
 
 // takes an object and recursively parses any values that can be converted to JSON
@@ -134,9 +112,15 @@ export let fieldsToSchema = (fields: Array<any>) => {
 };
 
 // Finds documents in collection that match query
-export async function find(query: object, collection: Schema) {
-	let _query = JSON.stringify(query);
-	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
+export async function find(query: object, collection: Schema): Promise<any> {
+	try {
+		const _query = encodeURIComponent(JSON.stringify(query));
+		const response = await axios.get(`/api/find?collection=${encodeURIComponent(collection.name)}&query=${_query}`);
+		return response.data;
+	} catch (error) {
+		// Handle error appropriately
+		console.error(error);
+	}
 }
 
 // Returns field's database field name or label
@@ -160,4 +144,41 @@ export async function saveFormData(data) {
 			await axios.patch(`/api/${$collection.name}`, formData, config);
 			break;
 	}
+}
+
+// Clone FormData to database
+export async function cloneData(data) {
+	let $collection = get(collection);
+	let formData = data instanceof FormData ? data : await col2formData(data);
+	if (!formData) return;
+	await axios.post(`/api/${$collection.name}`, formData, config);
+}
+
+// Publish FormData to database
+export async function publishData(id) {
+	let $collection = get(collection);
+	await axios.patch(`/api/${$collection.name}/${id}`, { published: true });
+}
+
+// Unpublish FormData to database
+export async function unpublishData(id) {
+	let $collection = get(collection);
+	await axios.patch(`/api/${$collection.name}/${id}`, { published: false });
+}
+
+// Schedule FormData to databas
+export async function scheduleData(id, date) {
+	let $collection = get(collection);
+	await axios.patch(`/api/${$collection.name}/${id}`, { publishDate: date });
+}
+
+// Delete FormData
+export async function deleteData(id) {
+	let $collection = get(collection);
+	await axios.delete(`/api/${$collection.name}/${id}`);
+}
+
+// Cancel FormData Creation
+export function handleCancel() {
+	mode.set('view');
 }

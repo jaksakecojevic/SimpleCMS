@@ -6,6 +6,7 @@
 	export let iconColorLeft = '';
 	export let iconColorRight = '';
 	export let backgroundColor = 'gray';
+	export let ariaLabel = '';
 
 	let sizeClasses: { [key: string]: string } = {
 		xs: 'px-1 py-1 text-xs',
@@ -37,6 +38,7 @@
 </script>
 
 <button
+	aria-label={ariaLabel}
 	class={`btn ${iconLeft || iconRight ? 'btn-icon' : ''} ${sizeClasses[size]} ${btnClass}`}
 	style={`--backgroundColor: ${backgroundColor}; --textColor: ${textColor}; --hoverBackgroundColor: ${hoverBackgroundColor}`}
 	on:click

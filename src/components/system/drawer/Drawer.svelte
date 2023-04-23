@@ -19,7 +19,7 @@
 	}
 </script>
 
-<section class="relative bg-gray-800 pt-2 w-[225px] px-1 flex flex-col h-screen">
+<section class="relative bg-gray-800 pt-2 px-1 flex flex-col h-screen {switchSideBar ? 'w-[215px]' : 'w-fit'}">
 	<header class="flex flex-col text-center dark:text-white">
 		{#if !switchSideBar}
 			<AnimatedHamburger />
@@ -36,7 +36,7 @@
 
 		<!-- sidebar collapse button -->
 		<button
-			class="z-10 absolute top-2 flex justify-center items-center -right-2 !rounded-full border-2 border-surface-300"
+			class="z-10 absolute top-2 flex justify-center items-center -right-2 !rounded-full border-2 border-gray-300"
 			on:click={() => (switchSideBar = !switchSideBar)}
 		>
 			{#if !switchSideBar}
@@ -44,14 +44,14 @@
 				<iconify-icon
 					icon="bi:arrow-left-circle-fill"
 					width="30"
-					class="rotate-180 rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
+					class="rotate-180 rounded-full bg-white text-white hover:cursor-pointer hover:bg-red-600 dark:text-gray-600 dark:hover:bg-red-600"
 				/>
 			{:else}
 				<!-- Icon expanded -->
 				<iconify-icon
 					icon="bi:arrow-left-circle-fill"
 					width="30"
-					class="rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
+					class="rounded-full bg-white text-white hover:cursor-pointer hover:bg-red-600 dark:text-gray-600 dark:hover:bg-red-600"
 				/>
 			{/if}
 		</button>
@@ -87,7 +87,11 @@
 
 	<main class="flex-auto items-center justify-start">
 		<Collections />
-		<a href="/gallery"><Button iconLeft="bi:images" btnClass="uppercase w-full">Gallery</Button></a>
+		{#if switchSideBar}
+			<a href="/gallery"><Button iconLeft="bi:images" btnClass="uppercase w-full">Gallery</Button></a>
+		{:else}
+			<iconify-icon icon="bi:images" width="30" class=" text-white bg-gray-500" />
+		{/if}
 	</main>
 
 	<footer class="mt-auto text-white px-1 pb-2 text-center">

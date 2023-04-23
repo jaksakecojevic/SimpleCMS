@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
-	import { mode, entryValue } from '@src/stores/store';
+	import { mode, entryValue, toggleLeftSidebar } from '@src/stores/store';
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
 
+	export let switchSideBar = false;
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -21,6 +23,7 @@
 	} from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions, SortDirection, FilterFn } from '@tanstack/table-core/src/types';
 	import Button from './system/buttons/Button.svelte';
+	import AnimatedHamburger from './AnimatedHamburger.svelte';
 
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
@@ -186,54 +189,77 @@
 	let flexRender = flexRenderBugged as (...args: Parameters<typeof flexRenderBugged>) => any;
 </script>
 
-<div class="text-right my-2 mr-2">
-	<!-- Search -->
-	<Button btnClass="circular-btn w-10 h-10 !p-0" iconLeft="material-symbols:search-rounded" on:click={() => (searchShow = !searchShow)} />
-
-	<!-- Filter -->
-	<Button iconLeft="material-symbols:filter-list-rounded" on:click={() => (filterShow = !filterShow)} />
-
-	<!-- Column Order & Visility -->
-	<!-- Column Order/ Sort-->
-	<Button iconLeft="fluent:column-triple-edit-24-regular" iconRight="mdi:chevron-down" on:click={() => (columnShow = !columnShow)}>
-		<!-- {$LL.TANSTACK_Column()} -->
-	</Button>
-
-	<!-- Spacing -->
-	<Button iconLeft="material-symbols:align-space-even-rounded" on:click={() => (spacingShow = !spacingShow)} />
-
-	{#if columnShow}
-		<div class="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-center dark:text-white">
-			<!-- toggle all -->
-			<div class="flex items-center mb-2 md:mb-0 md:mr-4">
-				<label>
-					<input
-						checked={$table.getIsAllColumnsVisible()}
-						on:change={(e) => {
-							console.info($table.getToggleAllColumnsVisibilityHandler()(e));
-						}}
-						type="checkbox"
-					/>{' '}
-					{$LL.TANSTACK_Toggle()}
-				</label>
-
-				<!-- Show/hide Columns via chips -->
-				<div class="flex flex-wrap items-center justify-center">
-					{#each $table.getAllLeafColumns() as column}
-						<span
-							class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
-							on:click={column.getToggleVisibilityHandler()}
-							on:keypress
-						>
-							{#if column.getIsVisible()}<span><iconify-icon icon="fa:check" /></span>{/if}
-							<span class="capitalize">{column.id}</span>
-						</span>
-					{/each}
-				</div>
+<div class="text-white my-2 mr-2 flex justify-between items-center">
+	<div class="flex items-center">
+		{#if !switchSideBar && $toggleLeftSidebar}
+			<AnimatedHamburger width="40" />
+		{/if}
+		<!-- Collection type with icon -->
+		<div class="flex flex-col mr-1 {!$toggleLeftSidebar ? 'ml-2' : ''}">
+			{#if categories}<div class="mb-2 text-xs capitalize text-surface-500 dark:text-surface-300">
+					{categories[0].name}
+				</div>{/if}
+			<div class="-mt-2 flex justify-start text-sm font-bold uppercase dark:text-white lg:text-xl md:text-2xl">
+				{#if $collection.icon}<span> <iconify-icon icon={$collection.icon} width="24" class="mr-1 sm:mr-2 text-red-500" /></span>{/if}
+				{#if $collection.name}
+					<div class="flex max-w-[65px] sm:max-w-none leading-3 xs:mt-1 md:mt-0 sm:mr-2 md:leading-none whitespace-normal">
+						{$collection.name}
+					</div>
+				{/if}
 			</div>
 		</div>
-	{/if}
+	</div>
+	<div class="buttons">
+		<!-- Search -->
+		<Button btnClass="circular-btn w-10 h-10 !p-0" iconLeft="material-symbols:search-rounded" on:click={() => (searchShow = !searchShow)} />
+
+		<!-- Filter -->
+		<Button iconLeft="material-symbols:filter-list-rounded" on:click={() => (filterShow = !filterShow)} />
+
+		<!-- Column Order & Visility -->
+		<!-- Column Order/ Sort-->
+		<Button iconLeft="fluent:column-triple-edit-24-regular" iconRight="mdi:chevron-down" on:click={() => (columnShow = !columnShow)}>
+			<!-- {$LL.TANSTACK_Column()} -->
+		</Button>
+
+		<!-- Spacing -->
+		<Button iconLeft="material-symbols:align-space-even-rounded" on:click={() => (spacingShow = !spacingShow)} />
+
+		<!-- MultiButton -->
+		<Button on:click={() => mode.set('create')} iconLeft="ic:outline-plus">Create</Button>
+	</div>
 </div>
+{#if columnShow}
+	<div class="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-center dark:text-white">
+		<!-- toggle all -->
+		<div class="flex items-center mb-2 md:mb-0 md:mr-4">
+			<label>
+				<input
+					checked={$table.getIsAllColumnsVisible()}
+					on:change={(e) => {
+						console.info($table.getToggleAllColumnsVisibilityHandler()(e));
+					}}
+					type="checkbox"
+				/>{' '}
+				{$LL.TANSTACK_Toggle()}
+			</label>
+
+			<!-- Show/hide Columns via chips -->
+			<div class="flex flex-wrap items-center justify-center">
+				{#each $table.getAllLeafColumns() as column}
+					<span
+						class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
+						on:click={column.getToggleVisibilityHandler()}
+						on:keypress
+					>
+						{#if column.getIsVisible()}<span><iconify-icon icon="fa:check" /></span>{/if}
+						<span class="capitalize">{column.id}</span>
+					</span>
+				{/each}
+			</div>
+		</div>
+	</div>
+{/if}
 
 <!-- Tanstack Table -->
 <table>
@@ -297,7 +323,7 @@
 <div class="flex justify-around items-center my-3 text-gray-400">
 	<!-- show & count rows -->
 	<div class="hidden md:block text-surface-400 text-sm">
-		{$LL.TANSTACK_Show()}
+		{$LL.TANSTACK_Page()}
 		<span class="text-surface-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
 		{$LL.TANSTACK_of()}
 		<!-- TODO: Get actual pages -->
@@ -315,7 +341,11 @@
 	</div>
 
 	<!-- number of pages -->
-	<select value={$table.getState().pagination.pageSize} on:change={setPageSize} class="hidden sm:block max-w-[100px] select text-sm">
+	<select
+		value={$table.getState().pagination.pageSize}
+		on:change={setPageSize}
+		class="hidden dark:text-white rounded py-2 dark:bg-gray-800 sm:block max-w-[100px] select text-sm"
+	>
 		{#each [10, 25, 50, 100, 500] as pageSize}
 			<option value={pageSize}>
 				{pageSize} Rows
@@ -324,20 +354,29 @@
 	</select>
 
 	<!-- next/previous pages -->
-	<div class="inline-flex rounded-md transition duration-150 ease-in-out [&>*+*]:border-gray-500">
-		<button class="w-3" on:click={() => setCurrentPage(0)} class:is-disabled={!$table.getCanPreviousPage()} disabled={!$table.getCanPreviousPage()}>
-			{'<<'}
+	<div class="inline-flex transition duration-150 ease-in-out mt-2">
+		<button
+			class=""
+			aria-label="Go to First Page"
+			on:click={() => setCurrentPage(0)}
+			class:is-disabled={!$table.getCanPreviousPage()}
+			disabled={!$table.getCanPreviousPage()}
+		>
+			<iconify-icon icon="material-symbols:first-page" width="24" />
 		</button>
 
 		<button
-			class="w-3"
+			class=""
+			aria-label="Go to Previous Page"
 			on:click={() => setCurrentPage($table.getState().pagination.pageIndex - 1)}
 			class:is-disabled={!$table.getCanPreviousPage()}
 			disabled={!$table.getCanPreviousPage()}
 		>
-			{'<'}
+			<iconify-icon icon="material-symbols:chevron-left" width="24" />
 		</button>
-		<div class="px-2 justify-center items-center text-sm">
+
+		<!-- input display -->
+		<div class="text-sm mb-2">
 			<span> {$LL.TANSTACK_Page()} </span>
 
 			<input
@@ -346,28 +385,29 @@
 				min={0}
 				max={$table.getPageCount() - 1}
 				on:change={handleCurrPageInput}
-				class="input w-16 !border-0 mt-[1px] rounded-none"
+				class=" input dark:text-white dark:bg-gray-800 py-[5px] border rounded w-14"
 			/>
 			<span>
 				{' '}{$LL.TANSTACK_of()}{' '}
-				{$table.getPageCount()}
+				<span class="dark:text-white">{$table.getPageCount()}</span>
 			</span>
 		</div>
+
 		<button
-			class="w-3"
+			aria-label="Go to Next Page"
 			on:click={() => setCurrentPage($table.getState().pagination.pageIndex + 1)}
 			class:is-disabled={!$table.getCanNextPage()}
 			disabled={!$table.getCanNextPage()}
 		>
-			{'>'}
+			<iconify-icon icon="material-symbols:chevron-right" width="24" />
 		</button>
 		<button
-			class="w-3"
+			aria-label="Go to Last Page"
 			on:click={() => setCurrentPage($table.getPageCount() - 1)}
 			class:is-disabled={!$table.getCanNextPage()}
 			disabled={!$table.getCanNextPage()}
 		>
-			{'>>'}
+			<iconify-icon icon="material-symbols:last-page" width="24" />
 		</button>
 	</div>
 </div>

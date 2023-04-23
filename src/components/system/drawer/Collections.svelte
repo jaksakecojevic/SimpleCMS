@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
 	import { mode } from '@src/stores/store';
-	import { categories } from '@src/collections';
+
+	export let switchSideBar = true;
 
 	let expanded: any = {};
 
@@ -15,19 +17,25 @@
 
 {#each categories as category, index}
 	<!-- Collection Partents -->
-	<div
-		class="arrow tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center bg-[#363b4e] text-white"
-		class:arrow_up={expanded[index]}
-		on:click={(e) => {
-			expanded[index] = !expanded[index];
-		}}
-	>
+	{#if !switchSideBar}
+		<div
+			class="arrow tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center bg-[#363b4e] text-white"
+			class:arrow_up={expanded[index]}
+			on:click={(e) => {
+				expanded[index] = !expanded[index];
+			}}
+		>
+			<div class="flex items-center">
+				<iconify-icon icon={category.icon} width="24" class="px-2 text-red-600" />
+
+				<p class="uppercase">{category.name}</p>
+			</div>
+		</div>
+	{:else}
 		<div class="flex items-center">
 			<iconify-icon icon={category.icon} width="24" class="px-2 text-red-600" />
-
-			<p class="uppercase">{category.name}</p>
 		</div>
-	</div>
+	{/if}
 
 	<!-- Collection Childern -->
 	<div class:expand={expanded[index]} use:setHeight class="overflow-hidden">

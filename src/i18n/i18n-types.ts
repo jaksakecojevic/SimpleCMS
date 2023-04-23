@@ -201,10 +201,6 @@ type RootTranslation = {
 	 */
 	TANSTACK_Page: string
 	/**
-	 * S​h​o​w​i​n​g​ ​P​a​g​e
-	 */
-	TANSTACK_Show: string
-	/**
 	 * o​f
 	 */
 	TANSTACK_of: string
@@ -410,34 +406,6 @@ type RootTranslation = {
 	 * L​o​a​d​i​n​g​.​.​.
 	 */
 	ENTRYLIST_Loading: string
-	/**
-	 * S​h​o​w​i​n​g
-	 */
-	ENTRYLIST_Showing: string
-	/**
-	 * t​o
-	 */
-	ENTRYLIST_to: string
-	/**
-	 * o​f
-	 */
-	ENTRYLIST_of: string
-	/**
-	 * R​o​w​s
-	 */
-	ENTRYLIST_Rows: string
-	/**
-	 * R​o​w​s
-	 */
-	ENTRYLIST_RowsItems: string
-	/**
-	 * P​r​e​v​i​o​u​s
-	 */
-	ENTRYLIST_Previous: string
-	/**
-	 * N​e​x​t
-	 */
-	ENTRYLIST_Next: string
 	/**
 	 * P​l​e​a​s​e​ ​C​o​n​f​i​r​m​ ​C​o​n​t​e​n​t​ ​C​r​e​a​t​i​o​n
 	 */
@@ -1232,10 +1200,6 @@ export type TranslationFunctions = {
 	 */
 	TANSTACK_Page: () => LocalizedString
 	/**
-	 * Showing Page
-	 */
-	TANSTACK_Show: () => LocalizedString
-	/**
 	 * of
 	 */
 	TANSTACK_of: () => LocalizedString
@@ -1439,34 +1403,6 @@ export type TranslationFunctions = {
 	 * Loading...
 	 */
 	ENTRYLIST_Loading: () => LocalizedString
-	/**
-	 * Showing
-	 */
-	ENTRYLIST_Showing: () => LocalizedString
-	/**
-	 * to
-	 */
-	ENTRYLIST_to: () => LocalizedString
-	/**
-	 * of
-	 */
-	ENTRYLIST_of: () => LocalizedString
-	/**
-	 * Rows
-	 */
-	ENTRYLIST_Rows: () => LocalizedString
-	/**
-	 * Rows
-	 */
-	ENTRYLIST_RowsItems: () => LocalizedString
-	/**
-	 * Previous
-	 */
-	ENTRYLIST_Previous: () => LocalizedString
-	/**
-	 * Next
-	 */
-	ENTRYLIST_Next: () => LocalizedString
 	/**
 	 * Please Confirm Content Creation
 	 */

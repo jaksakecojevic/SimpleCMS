@@ -60,7 +60,6 @@ const es: Translation = {
 	TANSTACK_Filter: 'Filtro de facetas',
 	TANSTACK_Export: 'Exportación XML',
 	TANSTACK_Page: 'Página',
-	TANSTACK_Show: 'Mostrar página',
 	TANSTACK_of: 'De',
 	TANSTACK_Total: 'Total',
 	TANSTACK_Row: 'Fila',
@@ -88,11 +87,9 @@ const es: Translation = {
 	LOGIN_ZOD_Email_string: 'El correo electrónico es obligatorio',
 	LOGIN_ZOD_Email_email: 'El correo electrónico debe ser un correo electrónico válido',
 	LOGIN_ZOD_Password_string: 'Se requiere contraseña',
-	LOGIN_ZOD_Password_regex:
-		'La contraseña debe tener al menos 8 caracteres y contener al menos una letra, un número y un carácter especial',
+	LOGIN_ZOD_Password_regex: 'La contraseña debe tener al menos 8 caracteres y contener al menos una letra, un número y un carácter especial',
 	LOGIN_ZOD_Confirm_password_string: 'Se requiere confirmación de contraseña',
-	LOGIN_ZOD_Confirm_password_regex:
-		'La contraseña debe tener al menos 8 caracteres y contener al menos una letra, un número y un carácter especial',
+	LOGIN_ZOD_Confirm_password_regex: 'La contraseña debe tener al menos 8 caracteres y contener al menos una letra, un número y un carácter especial',
 	LOGIN_ZOD_Token_string: 'Se requiere Auth Token',
 	LOGIN_ZOD_Password_match: 'La contraseña y la confirmación deben coincidir',
 
@@ -121,19 +118,11 @@ const es: Translation = {
 	ENTRYLIST_Delete_confirm: 'Confirmar',
 	ENTRYLIST_Search: 'Buscar',
 	ENTRYLIST_Loading: 'Cargando ...',
-	ENTRYLIST_Showing: 'Mostrando',
-	ENTRYLIST_to: 'a',
-	ENTRYLIST_of: 'de',
-	ENTRYLIST_Rows: 'filas”',
-	ENTRYLIST_RowsItems: 'Artículos',
-	ENTRYLIST_Previous: 'Anterior',
-	ENTRYLIST_Next: 'Siguiente',
 	ENTRYLIST_Modal_title_Create: 'Por favor, confirme la creación del contenido',
 	ENTRYLIST_Modal_body_Create: '¿Está seguro de que desea Crear este contenido?',
 	ENTRYLIST_Modal_title_Publish: 'Por favor, confirme la publicación del contenido',
 	ENTRYLIST_Modal_body_Publish: '¿Estás seguro de que deseas Publicar este contenido?',
-	ENTRYLIST_Modal_title_Unpublish:
-		'Por favor, confirme la anulación de la publicación del contenido',
+	ENTRYLIST_Modal_title_Unpublish: 'Por favor, confirme la anulación de la publicación del contenido',
 	ENTRYLIST_Modal_body_Unpublish: '¿Estás seguro de que deseas Despublicar este contenido?',
 	ENTRYLIST_Modal_title_Schedule: 'Por favor, confirme el horario del contenido',
 	ENTRYLIST_Modal_body_Schedule: '¿Está seguro de que desea Programar este contenido?',
@@ -188,21 +177,16 @@ const es: Translation = {
 	WIDGET_Relation_AddNew: 'Añadir nueva',
 
 	WIDGET_Seo_Suggetion_TitlePerfect: 'Tu título tiene más de 50 caracteres. ¡Perfecto!',
-	WIDGET_Seo_Suggetion_TitleGood:
-		'Tu título tiene más de 30 caracteres. Prueba con más de 50. ¡Bien!',
-	WIDGET_Seo_Suggetion_TitleBad:
-		'Tu título es demasiado corto. Asegúrate de que tu título tiene al menos 50 caracteres. ¡Malo!',
-	WIDGET_Seo_Suggetion_DescriptionPerfect:
-		'Tu descripción tiene entre 120 y 165 caracteres. ¡Perfecto!',
+	WIDGET_Seo_Suggetion_TitleGood: 'Tu título tiene más de 30 caracteres. Prueba con más de 50. ¡Bien!',
+	WIDGET_Seo_Suggetion_TitleBad: 'Tu título es demasiado corto. Asegúrate de que tu título tiene al menos 50 caracteres. ¡Malo!',
+	WIDGET_Seo_Suggetion_DescriptionPerfect: 'Tu descripción tiene entre 120 y 165 caracteres. ¡Perfecto!',
 	WIDGET_Seo_Suggetion_DescriptionGood: 'Tu descripción tiene más de 90 caracteres. ¡Bien!',
 	WIDGET_Seo_Suggetion_DescriptionBad: 'Tu descripción tiene menos de 90 caracteres. ¡Malo!',
 	WIDGET_Seo_Suggetion_SentencePerfect: 'Tu descripción tiene entre 2 y 4 frases. ¡Perfecto!',
-	WIDGET_Seo_Suggetion_SentenceBad:
-		'Tu descripción sólo tiene 1 frase. Asegúrate de que tu descripción tenga entre 2 y 4 frases.',
+	WIDGET_Seo_Suggetion_SentenceBad: 'Tu descripción sólo tiene 1 frase. Asegúrate de que tu descripción tenga entre 2 y 4 frases.',
 
 	WIDGET_Seo_Suggetion_NumberPerfect: 'Tu título utiliza números. ¡Perfecto!',
-	WIDGET_Seo_Suggetion_NumberBad:
-		'Tu título no usa números. Usar números en tu título puede aumentar tu CTR.',
+	WIDGET_Seo_Suggetion_NumberBad: 'Tu título no usa números. Usar números en tu título puede aumentar tu CTR.',
 	WIDGET_Seo_Suggetion_PowerWordTitle: `Tu título contiene la palabra poderosa ¡Perfecto!`,
 	WIDGET_Seo_Suggetion_PowerWordDescription: `ITu descripción utiliza la palabra poderosa palabra. ¡Perfecto!`,
 	WIDGET_Seo_Suggetion_ctaKeywordsTitle: `Tu título contiene la palabra clave CTA. Bien!`,
@@ -216,8 +200,7 @@ const es: Translation = {
 	WIDGET_Seo_Suggetion_SeoDescription: 'Descripción SEO',
 	WIDGET_Seo_Suggetion_SeoPreview: 'Vista previa SEO',
 	WIDGET_Seo_Suggetion_ListOfSuggestion: 'Sugerencias SEO:',
-	WIDGET_Seo_Suggetion_Text:
-		'Optimizar el título y la descripción para los resultados de búsqueda de Google',
+	WIDGET_Seo_Suggetion_Text: 'Optimizar el título y la descripción para los resultados de búsqueda de Google',
 	WIDGET_SEO_PowerWords: [
 		'Ahorro de tiempo',
 		'Aumentar',

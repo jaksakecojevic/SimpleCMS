@@ -60,7 +60,6 @@ const fr: Translation = {
 	TANSTACK_Filter: 'Filtres de facettes',
 	TANSTACK_Export: 'Export XML',
 	TANSTACK_Page: 'Page',
-	TANSTACK_Show: 'Affichage de la page',
 	TANSTACK_of: 'de',
 	TANSTACK_Total: 'Total',
 	TANSTACK_Row: 'Ligne',
@@ -94,8 +93,7 @@ const fr: Translation = {
 	LOGIN_ZOD_Confirm_password_regex:
 		'Le mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre, un chiffre et un caractère spécial.',
 	LOGIN_ZOD_Token_string: "Un jeton d'authentification est requis",
-	LOGIN_ZOD_Password_match:
-		'Le mot de passe et la confirmation du mot de passe doivent correspondre',
+	LOGIN_ZOD_Password_match: 'Le mot de passe et la confirmation du mot de passe doivent correspondre',
 
 	LOGIN_ZOD_General_Unkown: "Une erreur inconnue s'est produite",
 	LOGIN_ZOD_General_Error: 'Entrée invalide',
@@ -122,13 +120,6 @@ const fr: Translation = {
 	ENTRYLIST_Delete_confirm: 'Confirmer',
 	ENTRYLIST_Search: 'Rechercher',
 	ENTRYLIST_Loading: 'Loading...',
-	ENTRYLIST_Showing: 'Showing',
-	ENTRYLIST_to: 'to',
-	ENTRYLIST_of: 'of',
-	ENTRYLIST_Rows: 'Rows',
-	ENTRYLIST_RowsItems: 'Rows',
-	ENTRYLIST_Previous: 'Précédent',
-	ENTRYLIST_Next: 'Next',
 	ENTRYLIST_Modal_title_Create: 'Veuillez confirmer la création du contenu',
 	ENTRYLIST_Modal_body_Create: 'Êtes-vous sûr de vouloir créer ce contenu ?',
 	ENTRYLIST_Modal_title_Publish: 'Veuillez confirmer la publication du contenu',
@@ -190,19 +181,15 @@ const fr: Translation = {
 
 	WIDGET_Seo_Suggetion_TitlePerfect: 'Your title is more than 50 characters. Perfect!',
 	WIDGET_Seo_Suggetion_TitleGood: 'Your title is more than 30 characters. Try 50+. Good!',
-	WIDGET_Seo_Suggetion_TitleBad:
-		'Your title is too short. Make sure your title is at least 50 characters. Bad!',
-	WIDGET_Seo_Suggetion_DescriptionPerfect:
-		'Your description is between 120 and 165 characters. Perfect!',
+	WIDGET_Seo_Suggetion_TitleBad: 'Your title is too short. Make sure your title is at least 50 characters. Bad!',
+	WIDGET_Seo_Suggetion_DescriptionPerfect: 'Your description is between 120 and 165 characters. Perfect!',
 	WIDGET_Seo_Suggetion_DescriptionGood: 'Your description is more than 90 characters. Good!',
 	WIDGET_Seo_Suggetion_DescriptionBad: 'Your description is less than 90 characters. Bad!',
 	WIDGET_Seo_Suggetion_SentencePerfect: 'Your description is 2 to 4 sentences long. Perfect!',
-	WIDGET_Seo_Suggetion_SentenceBad:
-		'Your descripton is only 1 sentence long. Make sure your description is 2 to 4 sentences long.',
+	WIDGET_Seo_Suggetion_SentenceBad: 'Your descripton is only 1 sentence long. Make sure your description is 2 to 4 sentences long.',
 
 	WIDGET_Seo_Suggetion_NumberPerfect: 'Your title uses numbers. Perfect!',
-	WIDGET_Seo_Suggetion_NumberBad:
-		'Your title does not use numbers. The use of numbers in your title can increase your CTR.',
+	WIDGET_Seo_Suggetion_NumberBad: 'Your title does not use numbers. The use of numbers in your title can increase your CTR.',
 	WIDGET_Seo_Suggetion_PowerWordTitle: `Your title has the Power Word word Perfect!`,
 	WIDGET_Seo_Suggetion_PowerWordDescription: `Your description uses the Power Word word. Perfect!`,
 	WIDGET_Seo_Suggetion_ctaKeywordsTitle: `Your title has the CTA keyword keyword. Good!`,

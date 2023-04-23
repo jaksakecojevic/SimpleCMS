@@ -20,9 +20,9 @@
 </script>
 
 <div class="relative">
-	<Input type="text" labelClass="hidden" inputClass="border rounded p-2 w-full" {placeholder} on:input={handleInput} bind:value />
+	<Input type="text" labelClass="hidden" inputClass="border rounded p-2 " {placeholder} on:input={handleInput} bind:value />
 	{#if showDropdown}
-		<ul class="absolute border rounded bg-white w-full z-10">
+		<ul class="absolute border rounded bg-white z-10">
 			{#each filteredItems as item}
 				<li class="p-2 hover:bg-gray-100 cursor-pointer" on:click={() => handleSelect(item)}>
 					{item}

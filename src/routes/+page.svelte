@@ -44,5 +44,6 @@
 			<Fields />
 		{/if}
 	</div>
-	<ControlPanel />
+	<!-- TODO: add Top & Footer Drawers -->
+	<div class="hidden md:block"><ControlPanel /></div>
 </div>
