@@ -57,34 +57,43 @@
 			{/if}
 		</button>
 
-		<!-- Search -->
-		<!-- TODO: Needs more work -->
-		<div class="relative mx-auto my-2">
+		<div class="flex justify-between">
+			<!-- Corporate Identity -->
 			{#if !switchSideBar}
-				<input
-					on:keyup={updateFilter}
-					on:focus={() => (switchSideBar = !switchSideBar)}
-					placeholder="Search"
-					class="relative z-10 h-10 w-10 cursor-pointer !rounded-full border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-surface-600/50 dark:text-white md:mt-0 md:h-12"
-				/>
-			{:else}
-				<input
-					on:keyup={updateFilter}
-					placeholder="Search"
-					class="relative z-10 h-10 w-full cursor-pointer rounded-md border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-surface-600/50 dark:text-white"
-				/>
+				<a href="/" class="py-2 flex !no-underline">
+					<SimpleCmsLogo fill="red" className="h-8" />
+				</a>
 			{/if}
-			<!-- search icon -->
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-black px-3 dark:stroke-white"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke="currentColor"
-				stroke-width="2"
-			>
-				<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-			</svg>
+
+			<!-- Search -->
+			<!-- TODO: Needs more work -->
+			<div class="relative mx-auto my-2">
+				{#if !switchSideBar}
+					<input
+						on:keyup={updateFilter}
+						on:focus={() => (switchSideBar = !switchSideBar)}
+						placeholder="Search"
+						class="relative z-10 h-10 w-10 cursor-pointer !rounded-full border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12"
+					/>
+				{:else}
+					<input
+						on:keyup={updateFilter}
+						placeholder="Search"
+						class="relative z-10 h-10 w-full cursor-pointer rounded-md border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-gray-600/50 dark:text-white"
+					/>
+				{/if}
+				<!-- search icon -->
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-black px-3 dark:stroke-white"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					stroke-width="2"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+				</svg>
+			</div>
 		</div>
 	</header>
 

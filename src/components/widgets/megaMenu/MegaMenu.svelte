@@ -13,7 +13,7 @@
 
 	let showFields = false;
 	let depth = 0;
-	let _data: { [key: string]: any; children: any[] } = $mode == 'create' ? {} : value;
+	let _data: { [key: string]: any; children: any[] } = $mode == 'create' ? null : value;
 	let fieldsData = {};
 	let saveMode = $mode;
 
@@ -27,7 +27,7 @@
 			_data.children.push({ ...(await extractData(fieldsData)) });
 		}
 		_data = _data;
-		console.log(_data);
+		//console.log(_data);
 		showFields = false;
 		mode.set(saveMode);
 		depth = 0;

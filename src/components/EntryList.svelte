@@ -12,7 +12,8 @@
 	let searchShow = false;
 	let columnShow = false;
 	let filterShow = false;
-	let spacingShow = false;
+
+	let density = 'normal'; // Spacing/Density variable
 
 	import {
 		createSvelteTable,
@@ -23,7 +24,9 @@
 	} from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions, SortDirection, FilterFn } from '@tanstack/table-core/src/types';
 	import Button from './system/buttons/Button.svelte';
+	//import FloatingInput from './system/inputs/floatingInput';
 	import AnimatedHamburger from './AnimatedHamburger.svelte';
+	import FloatingInput from './system/inputs/floatingInput.svelte';
 
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
@@ -209,26 +212,59 @@
 			</div>
 		</div>
 	</div>
-	<div class="buttons">
-		<!-- Search -->
-		<Button btnClass="circular-btn w-10 h-10 !p-0" iconLeft="material-symbols:search-rounded" on:click={() => (searchShow = !searchShow)} />
 
+	<div class="relative">
+		<!-- Expanding Search -->
+		{#if searchShow}
+			<div class="absolute top-0 right-28 w-full flex items-center">
+				<input
+					type="text"
+					placeholder="Search..."
+					class="text-black rounded-l w-full h-full px-2 border-b border-gray-300 focus:border-blue-500"
+					on:blur={() => (searchShow = false)}
+					on:keydown={(e) => e.key === 'Enter' && (searchShow = false)}
+				/>
+				<!-- TODO: rounded-left-0 not working-->
+				<Button btnClass="rounded-left-0" iconLeft="ic:outline-search-off" on:click={() => (searchShow = !searchShow)} />
+			</div>
+		{:else}
+			<Button btnClass="circular-btn w-10 h-10 !p-0" iconLeft="material-symbols:search-rounded" on:click={() => (searchShow = !searchShow)} />
+		{/if}
 		<!-- Filter -->
 		<Button iconLeft="material-symbols:filter-list-rounded" on:click={() => (filterShow = !filterShow)} />
 
 		<!-- Column Order & Visility -->
 		<!-- Column Order/ Sort-->
-		<Button iconLeft="fluent:column-triple-edit-24-regular" iconRight="mdi:chevron-down" on:click={() => (columnShow = !columnShow)}>
+		<Button iconLeft="fluent:column-triple-edit-24-regular" on:click={() => (columnShow = !columnShow)}>
 			<!-- {$LL.TANSTACK_Column()} -->
 		</Button>
 
-		<!-- Spacing -->
-		<Button iconLeft="material-symbols:align-space-even-rounded" on:click={() => (spacingShow = !spacingShow)} />
+		<!-- Spacing/Density  -->
+		<Button
+			iconLeft={density === 'compact'
+				? 'material-symbols:align-space-even-rounded'
+				: density === 'normal'
+				? 'material-symbols:align-space-around-rounded'
+				: 'material-symbols:align-space-between-rounded'}
+			on:click={() => {
+				// Update the density variable
+				if (density === 'compact') {
+					density = 'normal';
+				} else if (density === 'normal') {
+					density = 'relaxed';
+				} else {
+					density = 'compact';
+				}
 
+				//TODO: Refresh the table data not wrking
+				//refresh($collection);
+			}}
+		/>
 		<!-- MultiButton -->
-		<Button on:click={() => mode.set('create')} iconLeft="ic:outline-plus">Create</Button>
+		<Button on:click={() => mode.set('create')} iconLeft="ic:outline-plus" btnClass="ml-2">Create</Button>
 	</div>
 </div>
+
 {#if columnShow}
 	<div class="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-center dark:text-white">
 		<!-- toggle all -->
@@ -285,12 +321,32 @@
 					</th>
 				{/each}
 			</tr>
+			{#if filterShow}
+				<tr class="divide-x capitalize">
+					{#each headerGroup.headers as header}
+						<th>
+							<!-- Add your filter input here -->
+							<FloatingInput
+								type="text"
+								icon="material-symbols:search-rounded"
+								class="text-black"
+								on:input={(e) => {
+									// Update filter value for this column
+									header.column.setFilter(e.target.value);
+								}}
+							/>
+						</th>
+					{/each}
+				</tr>
+			{/if}
 		{/each}
 	</thead>
+
 	<tbody>
 		{#each $table.getRowModel().rows as row, index}
+			<!-- TODO: {density} not working even when reactive-->
 			<tr
-				class="divide-x"
+				class="divide-x {density === 'compact' ? 'py-1' : density === 'normal' ? 'py-2' : 'py-3'}"
 				on:click={() => {
 					entryData.set(data?.entryList[index]);
 					mode.set('edit');
@@ -424,7 +480,6 @@
 
 	<!-- Pagination -->
 	<div class="text-gray-400 text-sm">
-		{$LL.TANSTACK_Show()}
 		<span class="text-gray-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
 		{$LL.TANSTACK_of()}
 		<!-- TODO: Get actual page -->
@@ -462,14 +517,6 @@
 	}
 	tbody tr:last-of-type td:last-of-type {
 		border-bottom-right-radius: 3px;
-	}
-	thead th,
-	td {
-		padding: 5px 0;
-	}
-	tbody tr:nth-child(2n + 1) {
-		padding: 5px 0;
-		background-color: #283847;
 	}
 	table {
 		min-width: calc(100% - 10px);

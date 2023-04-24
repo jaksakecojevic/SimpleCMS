@@ -4,6 +4,7 @@
 	import Input from '@src/components/system/inputs/input.svelte';
 	import { mode, entryData } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
+
 	export let field: FieldType | undefined;
 	let fieldName = getFieldName(field);
 
