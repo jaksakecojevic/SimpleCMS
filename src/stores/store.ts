@@ -3,7 +3,7 @@ import { writable, type Writable } from 'svelte/store';
 
 export let collectionValue: any = writable({}); // collective data of collection
 export let mode: Writable<'view' | 'edit' | 'create' | 'publish' | 'unpublish' | 'schedule ' | 'clone'> = writable('view');
-export let entryValue: Writable<any> = writable({});
+export let entryData: Writable<any> = writable({});
 
 // Store selected content language
 export const language: Writable<string> = writable(PUBLIC_LANGUAGE);

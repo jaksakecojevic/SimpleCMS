@@ -1,5 +1,7 @@
 import ImageUpload from '@src/components/widgets/imageUpload';
+
 type Widgets = [ReturnType<typeof ImageUpload>, ...any];
+
 export type Params = {
 	db_fieldName?: string;
 	label: string;

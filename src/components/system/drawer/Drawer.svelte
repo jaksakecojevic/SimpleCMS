@@ -21,6 +21,7 @@
 
 <section class="relative bg-gray-800 pt-2 px-1 flex flex-col h-screen {switchSideBar ? 'w-[215px]' : 'w-fit'}">
 	<header class="flex flex-col text-center dark:text-white">
+		<!-- Hamburger -->
 		{#if !switchSideBar}
 			<AnimatedHamburger />
 		{/if}
@@ -34,7 +35,7 @@
 			</a>
 		{/if}
 
-		<!-- sidebar collapse button -->
+		<!-- Sidebar collapse button -->
 		<button
 			class="z-10 absolute top-2 flex justify-center items-center -right-2 !rounded-full border-2 border-gray-300"
 			on:click={() => (switchSideBar = !switchSideBar)}
@@ -56,6 +57,8 @@
 			{/if}
 		</button>
 
+		<!-- Search -->
+		<!-- TODO: Needs more work -->
 		<div class="relative mx-auto my-2">
 			{#if !switchSideBar}
 				<input

@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import ImageArray from './imageArray';
+import Menu from './Menu';
 import Posts from './Posts';
 import Posts2 from './Posts2';
 import Posts3 from './Posts3';
@@ -12,8 +13,8 @@ let categories = [
 	},
 	{
 		name: 'Menu',
-		icon: 'material-symbols:menu-rounded',
-		collections: [Posts]
+		icon: 'bi:menu-button-wide',
+		collections: [Menu]
 	},
 	{
 		name: 'Gallery',

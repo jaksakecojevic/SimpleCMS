@@ -1,4 +1,5 @@
 import widgets from '../components/widgets';
+
 let schema = {
 	// Collection Name required
 	name: 'posts',

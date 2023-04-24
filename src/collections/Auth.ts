@@ -1,4 +1,5 @@
 // Define the schema for the User model
+
 export let UserSchema = {
 	_id: {
 		type: String // Set the type of the _id field to String

@@ -46,4 +46,8 @@
 	</div>
 	<!-- TODO: add Top & Footer Drawers -->
 	<div class="hidden md:block"><ControlPanel /></div>
+	<!--mobil Drawers-->
+	<div class="block md:hidden">Top Drawer</div>
+	<div class="block md:hidden">Footer Drawer</div>
+
 </div>

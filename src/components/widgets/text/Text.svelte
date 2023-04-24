@@ -2,12 +2,12 @@
 	import type { FieldType } from './';
 
 	import Input from '@src/components/system/inputs/input.svelte';
-	import { mode, entryValue } from '@src/stores/store';
+	import { mode, entryData } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 	export let field: FieldType | undefined;
 	let fieldName = getFieldName(field);
 
-	let _data: { [key: string]: string } = $mode == 'create' ? {} : $entryValue[fieldName];
+	let _data: { [key: string]: string } = $mode == 'create' ? {} : $entryData[fieldName];
 	export const fieldData = async () => _data;
 </script>
 

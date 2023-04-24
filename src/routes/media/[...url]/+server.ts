@@ -1,8 +1,15 @@
-import type { RequestHandler } from '../$types';
+import type { RequestHandler } from './$types';
 import fs from 'fs';
 import sharp from 'sharp';
 import mongoose from 'mongoose';
 import mime from 'mime-types';
+
+// Read the image from the media folder
+// Convert it to webp and save it to the media folder
+// Save the EXIF information and webp image to MongoDB
+// Return the webp image to the client
+
+// TODO: Add error handling and logging
 
 export const GET: RequestHandler = async ({ params }) => {
 	const data = await fs.promises.readFile(`./media/${params.url}`);

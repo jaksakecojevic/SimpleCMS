@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
-	import { mode, entryValue, toggleLeftSidebar } from '@src/stores/store';
+	import { mode, entryData, toggleLeftSidebar } from '@src/stores/store';
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
 
@@ -292,7 +292,7 @@
 			<tr
 				class="divide-x"
 				on:click={() => {
-					entryValue.set(data?.entryList[index]);
+					entryData.set(data?.entryList[index]);
 					mode.set('edit');
 				}}
 			>

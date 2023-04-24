@@ -21,6 +21,7 @@
 
 	export let root = true; // if Fields is not part of any widget.
 	export let fieldsData = {};
+	export let customData = {};
 
 	$: if (root) $collectionValue = fieldsData;
 </script>
@@ -101,7 +102,13 @@
 						</div>
 
 						<!-- display all widget fields -->
-						<svelte:component this={asAny(field.widget)} field={asAny(field)} bind:fieldData={fieldsData[getFieldName(field)]} {...$$props} />
+						<svelte:component
+							this={asAny(field.widget)}
+							field={asAny(field)}
+							bind:WidgetData={fieldsData[getFieldName(field)]}
+							value={customData[getFieldName(field)]}
+							{...$$props}
+						/>
 					</div>
 				{/key}
 			{/if}

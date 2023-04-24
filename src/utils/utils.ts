@@ -4,7 +4,7 @@ import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import axios from 'axios';
 import { get } from 'svelte/store';
-import { entryValue, mode } from '@src/stores/store';
+import { entryData, mode } from '@src/stores/store';
 
 // Configuration object for axios requests
 export const config = {
@@ -123,6 +123,20 @@ export async function find(query: object, collection: Schema): Promise<any> {
 	}
 }
 
+// Extracts data from fieldsData by awaiting the result of each function call and returning an object with the extracted values.
+export async function extractData(fieldsData: any) {
+	try {
+		const keys = Object.keys(fieldsData);
+		const results = await Promise.all(keys.map((key) => fieldsData[key]()));
+		const temp = {};
+		keys.forEach((key, i) => (temp[key] = results[i]));
+		return temp;
+	} catch (error) {
+		console.error(error);
+		throw new Error('Error extracting data from fieldsData');
+	}
+}
+
 // Returns field's database field name or label
 export function getFieldName(field: any) {
 	return (field?.db_fieldName || field?.label) as string;
@@ -132,7 +146,7 @@ export function getFieldName(field: any) {
 export async function saveFormData(data) {
 	let $mode = get(mode);
 	let $collection = get(collection);
-	let $entryValue = get(entryValue);
+	let $entryData = get(entryData);
 	let formData = data instanceof FormData ? data : await col2formData(data);
 	if (!formData) return;
 	switch ($mode) {
@@ -140,7 +154,7 @@ export async function saveFormData(data) {
 			await axios.post(`/api/${$collection.name}`, formData, config);
 			break;
 		case 'edit':
-			formData.append('_id', $entryValue._id);
+			formData.append('_id', $entryData._id);
 			await axios.patch(`/api/${$collection.name}`, formData, config);
 			break;
 	}
