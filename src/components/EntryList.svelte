@@ -10,6 +10,10 @@
 	import LL from '@src/i18n/i18n-svelte';
 
 	let searchShow = false;
+	let showInput = false;
+	function toggleInput() {
+		showInput = !showInput;
+	}
 	let columnShow = false;
 	let filterShow = false;
 
@@ -215,12 +219,13 @@
 
 	<div class="relative">
 		<!-- Expanding Search -->
+		<!-- TODO: Expand transtion not working -->
 		{#if searchShow}
 			<div class="absolute top-0 right-28 w-full flex items-center">
 				<input
 					type="text"
 					placeholder="Search..."
-					class="text-black rounded-l w-full h-full px-2 border-b border-gray-300 focus:border-blue-500"
+					class="text-black rounded bg-gray-800 w-full dark:text-white px-2 border-0 border-b border-gray-300 focus:border-blue-500 transition-all duration-500 ease-in-out outline-none cursor-pointer"
 					on:blur={() => (searchShow = false)}
 					on:keydown={(e) => e.key === 'Enter' && (searchShow = false)}
 				/>
@@ -256,7 +261,7 @@
 					density = 'compact';
 				}
 
-				//TODO: Refresh the table data not wrking
+				//TODO: Refresh the table data not working
 				//refresh($collection);
 			}}
 		/>
@@ -329,7 +334,7 @@
 							<FloatingInput
 								type="text"
 								icon="material-symbols:search-rounded"
-								class="text-black"
+								label="Filter ..."
 								on:input={(e) => {
 									// Update filter value for this column
 									header.column.setFilter(e.target.value);

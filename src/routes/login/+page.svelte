@@ -6,6 +6,9 @@
 	import SignUp from './components/SignUp.svelte';
 	import Logo from './components/icons/Logo.svelte';
 
+	export let data: any;
+	//console.log(data);
+
 	let active: undefined | 0 | 1 = undefined;
 	let background: 'white' | '#242728' = 'white';
 

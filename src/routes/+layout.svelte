@@ -5,4 +5,5 @@
 	import 'iconify-icon';
 </script>
 
+<!-- This needs the the 4x sidebards -->
 <slot />

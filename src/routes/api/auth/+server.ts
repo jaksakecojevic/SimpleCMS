@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 import type { RequestHandler } from './$types';
+import type { Cookies } from '@sveltejs/kit';
 import { auth } from '@src/routes/api/db';
 
 // Define a POST request handler function
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, cookies }) => {
 	// Extract form data from the request object
 	let formData = await request.formData();
 	let email = formData.get('email') as string;
@@ -13,11 +14,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	// Determine which function to call based on the value of authType
 	if (authType == 'signIn') {
-		return await signIn(email, password);
+		return await signIn(email, password, cookies);
 	} else if (authType == 'signUp') {
-		return await signUp(email, password);
-	} else if (authType == 'validate') {
-		return await validate(sessionID);
+		return await signUp(email, password, cookies);
 	} else {
 		return new Response('', { status: 404 });
 	}
@@ -40,18 +39,18 @@ async function verifyRegistrationToken(token: string) {
 	return !!registrationToken;
 }
 
-async function signUp(email: string, password: string, registrationToken?: string) {
+async function signUp(email: string, password: string, cookies: Cookies) {
 	// Check if a FirstUser document exists in the MongoDB database
 	const isFirstUser = await checkIfFirstUserExists();
 
 	// If a FirstUser document exists and no registration token is provided, return an error
-	if (isFirstUser && !registrationToken) {
+	if (isFirstUser && !cookies.get('registrationToken')) {
 		return new Response(JSON.stringify({ status: 400, message: 'Registration token is required for signup' }));
 	}
 
 	// If a FirstUser document exists and a registration token is provided, verify the token
-	if (isFirstUser && registrationToken) {
-		const isTokenValid = await verifyRegistrationToken(registrationToken);
+	if (isFirstUser && cookies.get('registrationToken')) {
+		const isTokenValid = await verifyRegistrationToken(cookies.get('registrationToken'));
 		if (!isTokenValid) {
 			return new Response(JSON.stringify({ status: 400, message: 'Invalid registration token' }));
 		}
@@ -87,17 +86,13 @@ async function signUp(email: string, password: string, registrationToken?: strin
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			email: email,
+			email,
 			subject: 'New user registration',
 			message: 'New user registration',
 			templateName: 'Welcome',
 			props: {
 				username: user.username,
-				email: email
-				//token: registrationToken
-				// role: role,
-				// resetLink: link,
-				//expires_at: epoch_expires_at
+				email
 			}
 		})
 	});
@@ -110,7 +105,7 @@ async function signUp(email: string, password: string, registrationToken?: strin
 }
 
 // Define a function for signing up a new user
-async function signIn(email: string, password: string) {
+async function signIn(email: string, password: string, cookies: Cookies) {
 	// Authenticate the user with the provided email and password
 	let key = await auth.useKey('email', email, password).catch(() => null);
 	if (!key) return new Response(JSON.stringify({ status: 404 }));
@@ -120,19 +115,22 @@ async function signIn(email: string, password: string) {
 
 	// Retrieve the user's information
 	let user = await auth.getUser(key.userId);
+	cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
+		path: '/'
+	});
 
 	// Return a response with the user's username, session ID, and status code
 	return new Response(JSON.stringify({ userername: user.username, session: session.sessionId, status: 200 }));
 }
 
 // Define a function for validating a session ID
-async function validate(sessionID: string | null) {
-	if (!sessionID) {
-		return new Response(JSON.stringify({ status: 404 }));
-	}
-	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
-	if (!resp) return new Response(JSON.stringify({ status: 404 }));
+// async function validate(sessionID: string | null, cookies: Cookies) {
+// 	if (!sessionID) {
+// 		return new Response(JSON.stringify({ status: 404 }));
+// 	}
+// 	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
+// 	if (!resp) return new Response(JSON.stringify({ status: 404 }));
 
-	// Return a response with the user's username, session ID, and status code
-	return new Response(JSON.stringify({ user: resp.user.username, session: resp.session?.sessionId, status: 200 }));
-}
+// 	// Return a response with the user's username, session ID, and status code
+// 	return new Response(JSON.stringify({ user: resp.user.username, session: resp.session?.sessionId, status: 200 }));
+// }

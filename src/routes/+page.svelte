@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import axios from 'axios';
-	import { onMount } from 'svelte';
 	import { collectionValue, mode } from '@src/stores/store';
 	import { credentials } from '@src/stores/load';
 	import Drawer from '@src/components/system/drawer/Drawer.svelte';
@@ -9,27 +6,12 @@
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
 	import { collection } from '@src/collections';
+	import type { LayoutServerData } from './$types';
 
-	// Perform HTTP POST request to /api/auth endpoint on mount
-	onMount(() => {
-		axios
-			.post(
-				`/api/auth`,
-				{ sessionID: $credentials.session, authType: 'validate' },
-				{
-					headers: {
-						'content-type': 'multipart/form-data'
-					}
-				}
-			)
-			.then((response) => {
-				if (response.data.status == 200) {
-					$credentials = response.data;
-				} else {
-					goto('/login');
-				}
-			});
-	});
+	export let data: LayoutServerData;
+	//console.log(data);
+	credentials.set(data.credentials);
+
 	collection.subscribe((value) => {
 		$collectionValue = {};
 	});
@@ -45,9 +27,10 @@
 		{/if}
 	</div>
 	<!-- TODO: add Top & Footer Drawers -->
-	<div class="hidden md:block"><ControlPanel /></div>
-	<!--mobil Drawers-->
-	<div class="block md:hidden">Top Drawer</div>
-	<div class="block md:hidden">Footer Drawer</div>
-
+	<div class="hidden md:block">
+		<ControlPanel />
+	</div>
+	<!--mobile Drawers-->
+	<!-- <div class="block md:hidden">Top Drawer</div>
+	<div class="block md:hidden">Footer Drawer</div> -->
 </div>

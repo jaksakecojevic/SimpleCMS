@@ -7,9 +7,36 @@
 	import Badges from '../badges/Badges.svelte';
 	import ThemeSwitcher from '@src/components/ThemeSwitcher.svelte';
 	import Button from '../buttons/Button.svelte';
+	import { onMount } from 'svelte';
 
 	export let switchSideBar = true;
-	const pkg = __VERSION__;
+
+	let badgeColor = 'primary'; // default badge color
+
+	// fetch latest release information from GitHub
+	// TODO: Check Version controls
+	const currentVersion = __VERSION__;
+	async function getLatestVersion() {
+		const response = await fetch('https://api.github.com/repos/Rar9/SimpleCMS/releases/latest');
+		const data = await response.json();
+		return data.tag_name;
+	}
+
+	onMount(async () => {
+		const latestVersion = await getLatestVersion();
+
+		// compare versions
+		if (currentVersion !== latestVersion) {
+			const [currentMajor, currentMinor] = currentVersion.split('.');
+			const [latestMajor, latestMinor] = latestVersion.split('.');
+
+			if (currentMajor !== latestMajor) {
+				badgeColor = 'danger'; // major update available
+			} else if (currentMinor !== latestMinor) {
+				badgeColor = 'warning'; // minor update available
+			}
+		}
+	});
 
 	// search filter
 	let filterCollections = '';
@@ -143,7 +170,7 @@
 				<!-- CMS Version -->
 				<div class="col-span-2 mx-auto">
 					<a href="https://github.com/Rar9/SimpleCMS/" target="blank">
-						<Badges text={`${switchSideBar ? 'Version: ' : ''}${pkg}`} color="primary" />
+						<Badges text={`${switchSideBar ? 'Version: ' : ''}${currentVersion}`} color={badgeColor} />
 					</a>
 				</div>
 			</div>
