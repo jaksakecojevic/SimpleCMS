@@ -4,12 +4,13 @@ import Menu from './Menu';
 import Posts from './Posts';
 import Posts2 from './Posts2';
 import Posts3 from './Posts3';
+import Relation from './Relation';
 
 let categories = [
 	{
 		name: 'Collections',
 		icon: 'bi:collection',
-		collections: [Posts, Posts2, Posts3]
+		collections: [Posts, Posts2, Posts3, Relation]
 	},
 	{
 		name: 'Menu',

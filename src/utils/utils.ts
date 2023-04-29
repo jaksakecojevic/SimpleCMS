@@ -125,8 +125,33 @@ export let fieldsToSchema = (fields: Array<any>) => {
 // Finds documents in collection that match query
 export async function find(query: object, collection: Schema): Promise<any> {
 	try {
+		// Check if collection is present
+		if (!collection) return;
+
+		// Encode query string
 		const _query = encodeURIComponent(JSON.stringify(query));
+
+		// Make API call
 		const response = await axios.get(`/api/find?collection=${encodeURIComponent(collection.name)}&query=${_query}`);
+
+		// Return data
+		return response.data;
+	} catch (error) {
+		// Handle error appropriately
+		console.error(error);
+	}
+}
+
+// Finds document in collection with specified ID
+export async function findById(id: string, collection: Schema): Promise<any> {
+	try {
+		// Check if ID and collection are present
+		if (!id || !collection) return;
+
+		// Make API call
+		const response = await axios.get(`/api/find?collection=${encodeURIComponent(collection.name)}&id=${id}`);
+
+		// Return data
 		return response.data;
 	} catch (error) {
 		// Handle error appropriately
@@ -154,20 +179,32 @@ export function getFieldName(field: any) {
 }
 
 // Saves FormData to database
-export async function saveFormData(data) {
-	let $mode = get(mode);
-	let $collection = get(collection);
+export async function saveFormData({ data, _collection, _mode, id }: { data: any; _collection?: Schema; _mode?: 'edit' | 'create'; id?: string }) {
+	// Get mode and collection from state
+	let $mode = _mode || get(mode);
+	let $collection = _collection || get(collection);
+
+	// Get entry data from state
 	let $entryData = get(entryData);
+
+	// Convert data to FormData if necessary
 	let formData = data instanceof FormData ? data : await col2formData(data);
+
+	// Check if formData is present
 	if (!formData) return;
+
+	// Check if ID is present in edit mode
+	if (_mode === 'edit' && !id) {
+		throw new Error('ID is required for edit mode.');
+	}
+
+	// Make API call based on mode
 	switch ($mode) {
 		case 'create':
-			await axios.post(`/api/${$collection.name}`, formData, config);
-			break;
+			return await axios.post(`/api/${$collection.name}`, formData, config).then((res) => res.data);
 		case 'edit':
-			formData.append('_id', $entryData._id);
-			await axios.patch(`/api/${$collection.name}`, formData, config);
-			break;
+			formData.append('_id', id || $entryData._id);
+			return await axios.patch(`/api/${$collection.name}`, formData, config).then((res) => res.data);
 	}
 }
 

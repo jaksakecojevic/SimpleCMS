@@ -122,15 +122,3 @@ async function signIn(email: string, password: string, cookies: Cookies) {
 	// Return a response with the user's username, session ID, and status code
 	return new Response(JSON.stringify({ userername: user.username, session: session.sessionId, status: 200 }));
 }
-
-// Define a function for validating a session ID
-// async function validate(sessionID: string | null, cookies: Cookies) {
-// 	if (!sessionID) {
-// 		return new Response(JSON.stringify({ status: 404 }));
-// 	}
-// 	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
-// 	if (!resp) return new Response(JSON.stringify({ status: 404 }));
-
-// 	// Return a response with the user's username, session ID, and status code
-// 	return new Response(JSON.stringify({ user: resp.user.username, session: resp.session?.sessionId, status: 200 }));
-// }

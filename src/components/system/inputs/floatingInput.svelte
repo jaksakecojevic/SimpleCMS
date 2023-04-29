@@ -20,7 +20,6 @@ This FloatingInput component has the following properties:
 	// Define an interface for the input properties
 	interface InputProps {
 		disabled?: boolean;
-		// error?: string | (() => string);
 		icon?: string;
 		iconColor?: string;
 		inputClass?: string;
@@ -38,7 +37,6 @@ This FloatingInput component has the following properties:
 	}
 
 	export let disabled: InputProps['disabled'] = false;
-	// export let error: InputProps['error'] = () => `${label} is required`;
 	export let icon: InputProps['icon'] = '';
 	export let iconColor: InputProps['iconColor'] = 'gray-500';
 
@@ -117,8 +115,8 @@ This FloatingInput component has the following properties:
 	{#if label}
 		<label
 			for="input"
-			class="{labelClass} absolute left-6 text-gray-400 text-sm pointer-events-none transform transition-all duration-200 ease-in-out peer-focus:-top-3 peer-focus:-left-0 peer-focus:text-blue-600 peer-focus:text-xs peer-placeholder-shown:text-base peer-placeholder-shown:-top-2 peer-placeholder-shown:text-gray-400 {value &&
-				'-top-3 -left-0 text-blue-600 text-xs'}"
+			class="{labelClass} absolute left-6 text-gray-400 text-sm pointer-events-none transform transition-all duration-200 ease-in-out peer-focus:-top-1.5 peer-focus:-left-0 peer-focus:text-blue-600 peer-focus:text-xs peer-placeholder-shown:text-base peer-placeholder-shown:-top-1 peer-placeholder-shown:text-gray-400 {value &&
+				'-top-1.5 -left-0 text-blue-600 text-xs'}"
 		>
 			{label}
 			{#if required}
@@ -126,10 +124,6 @@ This FloatingInput component has the following properties:
 			{/if}
 		</label>
 	{/if}
-
-	<!-- {#if error}
-			<div class="absolute top-[2.4em] left-0 text-xs text-red-500">{typeof error === 'function' ? error() : error}</div>
-		{/if} -->
 </div>
 
 <style lang="postcss">

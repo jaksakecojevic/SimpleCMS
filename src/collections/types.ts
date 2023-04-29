@@ -4,5 +4,5 @@ export interface Schema {
 	slug?: string;
 	fields: Array<any>;
 	strict?: boolean;
-	status: 'published' | 'unpublished' | 'draft' | 'schedule' | 'cloned';
+	status?: 'published' | 'unpublished' | 'draft' | 'schedule' | 'cloned';
 }

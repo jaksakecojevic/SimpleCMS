@@ -6,7 +6,7 @@
 	import { saveFormData } from '@src/utils/utils';
 
 	async function saveData() {
-		await saveFormData($collectionValue);
+		await saveFormData({ data: $collectionValue });
 		mode.set('view');
 	}
 </script>

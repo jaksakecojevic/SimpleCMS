@@ -1,6 +1,7 @@
 import widgets from '../components/widgets';
+import type { Schema } from './types';
 
-let schema = {
+let schema: Schema = {
 	// Collection Name required
 	name: 'imagearray',
 

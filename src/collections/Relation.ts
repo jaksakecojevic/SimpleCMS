@@ -1,23 +1,21 @@
 import widgets from '../components/widgets';
+import Posts from './Posts2';
+
 let schema = {
 	// Collection Name required
-	name: 'posts2',
+	name: 'relation 2 posts',
+
 	// Optional & Icon , status, slug
 	// See for possible Icons https://icon-sets.iconify.design/
-	icon: 'bi:card-text',
-	slug: ' posts2',
+	icon: 'mdi:relation-many-to-many',
 
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [
-		widgets.Text({
-			label: 'First Name',
-			icon: 'ri:t-box-line',
-			placeholder: 'Enter First Name'
-		}),
-		widgets.Text({
-			label: 'Last Name',
-			icon: 'ri:t-box-line'
+		widgets.Relation({
+			db_fieldName: 'relation',
+			label: 'Relation M2M to Posts',
+			relation: Posts
 		})
 	]
 };
