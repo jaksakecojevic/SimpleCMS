@@ -13,9 +13,9 @@ let categories = [
 		collections: [Posts, Posts2, Posts3, Relation]
 	},
 	{
-		name: 'Menu',
+		name: 'Menus',
 		icon: 'bi:menu-button-wide',
-		collections: [Menu]
+		collections: [Menu, Menu]
 	},
 	{
 		name: 'Gallery',

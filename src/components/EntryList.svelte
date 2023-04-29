@@ -196,20 +196,20 @@
 	let flexRender = flexRenderBugged as (...args: Parameters<typeof flexRenderBugged>) => any;
 </script>
 
-<div class="text-white my-2 mr-2 flex justify-between items-center">
+<div class="my-2 mr-2 flex items-center justify-between text-white">
 	<div class="flex items-center">
 		{#if !switchSideBar && $toggleLeftSidebar}
 			<AnimatedHamburger width="40" />
 		{/if}
 		<!-- Collection type with icon -->
-		<div class="flex flex-col mr-1 {!$toggleLeftSidebar ? 'ml-2' : ''}">
-			{#if categories}<div class="mb-2 text-xs capitalize text-surface-500 dark:text-surface-300">
+		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : ''}">
+			{#if categories}<div class="text-surface-500 dark:text-surface-300 mb-2 text-xs capitalize">
 					{categories[0].name}
 				</div>{/if}
-			<div class="-mt-2 flex justify-start text-sm font-bold uppercase dark:text-white lg:text-xl md:text-2xl">
-				{#if $collection.icon}<span> <iconify-icon icon={$collection.icon} width="24" class="mr-1 sm:mr-2 text-red-500" /></span>{/if}
+			<div class="-mt-2 flex justify-start text-sm font-bold uppercase dark:text-white md:text-2xl lg:text-xl">
+				{#if $collection.icon}<span> <iconify-icon icon={$collection.icon} width="24" class="mr-1 text-red-500 sm:mr-2" /></span>{/if}
 				{#if $collection.name}
-					<div class="flex max-w-[65px] sm:max-w-none leading-3 xs:mt-1 md:mt-0 sm:mr-2 md:leading-none whitespace-normal">
+					<div class="flex max-w-[65px] whitespace-normal leading-3 sm:mr-2 sm:max-w-none md:mt-0 md:leading-none xs:mt-1">
 						{$collection.name}
 					</div>
 				{/if}
@@ -221,11 +221,11 @@
 		<!-- Expanding Search -->
 		<!-- TODO: Expand transtion not working -->
 		{#if searchShow}
-			<div class="absolute top-0 right-28 w-full flex items-center">
+			<div class="absolute right-28 top-0 flex w-full items-center">
 				<input
 					type="text"
 					placeholder="Search..."
-					class="text-black rounded bg-gray-800 w-full dark:text-white px-2 border-0 border-b border-gray-300 focus:border-blue-500 transition-all duration-500 ease-in-out outline-none cursor-pointer"
+					class="w-full cursor-pointer rounded border-0 border-b border-gray-300 bg-gray-800 px-2 text-black outline-none transition-all duration-500 ease-in-out focus:border-blue-500 dark:text-white"
 					on:blur={() => (searchShow = false)}
 					on:keydown={(e) => e.key === 'Enter' && (searchShow = false)}
 				/>
@@ -271,9 +271,9 @@
 </div>
 
 {#if columnShow}
-	<div class="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-center dark:text-white">
+	<div class="flex flex-col dark:text-white md:flex-row md:flex-wrap md:items-center md:justify-center">
 		<!-- toggle all -->
-		<div class="flex items-center mb-2 md:mb-0 md:mr-4">
+		<div class="mb-2 flex items-center md:mb-0 md:mr-4">
 			<label>
 				<input
 					checked={$table.getIsAllColumnsVisible()}
@@ -351,14 +351,14 @@
 		{#each $table.getRowModel().rows as row, index}
 			<!-- TODO: {density} not working even when reactive-->
 			<tr
-				class="divide-x {density === 'compact' ? 'py-1' : density === 'normal' ? 'py-2' : 'py-3'}"
+				class="divide-x"
 				on:click={() => {
 					entryData.set(data?.entryList[index]);
 					mode.set('edit');
 				}}
 			>
 				{#each row.getVisibleCells() as cell}
-					<td>
+					<td class={density === 'compact' ? 'py-1' : density === 'normal' ? 'py-2' : 'py-3'}>
 						{@html cell.getValue()}
 					</td>
 				{/each}
@@ -381,9 +381,9 @@
 </table>
 
 <!-- Pagination -->
-<div class="flex justify-around items-center my-3 text-gray-400">
+<div class="my-3 flex items-center justify-around text-gray-400">
 	<!-- show & count rows -->
-	<div class="hidden md:block text-surface-400 text-sm">
+	<div class="text-surface-400 hidden text-sm md:block">
 		{$LL.TANSTACK_Page()}
 		<span class="text-surface-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
 		{$LL.TANSTACK_of()}
@@ -405,7 +405,7 @@
 	<select
 		value={$table.getState().pagination.pageSize}
 		on:change={setPageSize}
-		class="hidden dark:text-white rounded py-2 dark:bg-gray-800 sm:block max-w-[100px] select text-sm"
+		class="select hidden max-w-[100px] rounded py-2 text-sm dark:bg-gray-800 dark:text-white sm:block"
 	>
 		{#each [10, 25, 50, 100, 500] as pageSize}
 			<option value={pageSize}>
@@ -415,7 +415,7 @@
 	</select>
 
 	<!-- next/previous pages -->
-	<div class="inline-flex transition duration-150 ease-in-out mt-2">
+	<div class="mt-2 inline-flex transition duration-150 ease-in-out">
 		<button
 			class=""
 			aria-label="Go to First Page"
@@ -437,7 +437,7 @@
 		</button>
 
 		<!-- input display -->
-		<div class="text-sm mb-2">
+		<div class="mb-2 text-sm">
 			<span> {$LL.TANSTACK_Page()} </span>
 
 			<input
@@ -446,7 +446,7 @@
 				min={0}
 				max={$table.getPageCount() - 1}
 				on:change={handleCurrPageInput}
-				class=" input dark:text-white dark:bg-gray-800 py-[5px] border rounded w-14"
+				class=" input w-14 rounded border py-[5px] dark:bg-gray-800 dark:text-white"
 			/>
 			<span>
 				{' '}{$LL.TANSTACK_of()}{' '}
@@ -472,9 +472,9 @@
 		</button>
 	</div>
 </div>
-<div class="md:hidden flex flex-col justify-center items-center gap-2">
+<div class="flex flex-col items-center justify-center gap-2 md:hidden">
 	<!-- number of pages -->
-	<select value={$table.getState().pagination.pageSize} on:change={setPageSize} class="sm:hidden max-w-[100px] select text-sm">
+	<select value={$table.getState().pagination.pageSize} on:change={setPageSize} class="select max-w-[100px] text-sm sm:hidden">
 		{#each [10, 25, 50, 100, 500] as pageSize}
 			<option value={pageSize}>
 				{pageSize}
@@ -484,7 +484,7 @@
 	</select>
 
 	<!-- Pagination -->
-	<div class="text-gray-400 text-sm">
+	<div class="text-sm text-gray-400">
 		<span class="text-gray-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
 		{$LL.TANSTACK_of()}
 		<!-- TODO: Get actual page -->

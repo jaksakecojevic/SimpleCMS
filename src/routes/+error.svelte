@@ -3,6 +3,8 @@
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 
+	import  '@src/stores/load'
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -17,7 +19,7 @@
 	$: array = [...Array(repeat)].map((_) => [...text].concat([...separator])).flat();
 </script>
 
-{#if $page}
+
 	<main class="flex h-screen w-full flex-col items-center justify-center bg-gradient-to-t from-gray-900 via-gray-700 to-gray-900 text-white">
 		<div class="relative">
 			<div class="absolute seal" style="--size: {size}px; --speed: {speed * 1000}ms; --font: {font}em">
@@ -39,7 +41,7 @@
 			>
 				<div class="">{$page.url}</div>
 				<!-- TODO: i18n error is not working -->
-				<div class="flex-nowrap whitespace-nowrap">{$LL.ERROR_Pagenotfound()} i18n use</div>
+				<div class="flex-nowrap whitespace-nowrap">{$LL.ERROR_Pagenotfound()}</div>
 			</div>
 		</div>
 
@@ -47,15 +49,15 @@
 			{#if $page.error} {$page.error.message} {/if}
 		</h1>
 		<!-- TODO: i18n error is not working -->
-		<p class="text-lg text-white">{$LL.ERROR_Wrong()} i18n use</p>
+		<p class="text-lg text-white">{$LL.ERROR_Wrong()}</p>
 		<a
 			href="/"
 			data-sveltekit-preload-data="tap"
 			class="relative mt-5 block rounded-full bg-gradient-to-br from-red-700 via-red-600 to-red-700 px-8 py-4 font-bold uppercase !text-white shadow-xl"
-			>{$LL.ERROR_GoHome()} i18n use</a
+			>{$LL.ERROR_GoHome()}</a
 		>
 	</main>
-{/if}
+
 
 <style>
 	@keyframes rotation {

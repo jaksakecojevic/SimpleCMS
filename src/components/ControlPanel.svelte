@@ -39,8 +39,8 @@
 </div> -->
 
 <!-- Desktop Right Sidebar -->
-<div class="container pt-2 bg-gray-800">
-	{#if $mode == ['view']}
+<div class="container bg-gray-800 pt-2">
+	{#if $mode == 'view'}
 		<Button on:click={() => mode.set('create')}>Create</Button>
 	{:else if ['edit', 'create'].includes($mode)}
 		<header class="mx-2 text-red-500">
@@ -53,11 +53,11 @@
 			{#if collectionValue.name}<p>Seo {collectionValue.name} widget</p>{/if}
 		</main>
 		<footer class="text-white">
-			<h2 class="font-bold text-center">Content Info:</h2>
+			<h2 class="text-center font-bold">Content Info:</h2>
 			<div class="footer-content text-sm">
 				<!-- TODO: Use real dates & revision -->
 				{#if $collection.status}
-					<div class="text-red-500 mb-2"><span>Status:</span><span class="uppercase">{$collection.status}</span></div>
+					<div class="mb-2 text-red-500"><span>Status:</span><span class="uppercase">{$collection.status}</span></div>
 				{/if}
 				<div><span>Created:</span><span>{$collection.created}</span></div>
 				<div><span>Updated:</span><span>{$collection.updated}</span></div>

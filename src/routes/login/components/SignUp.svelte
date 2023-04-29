@@ -46,6 +46,9 @@
 	}
 
 	async function signup() {
+		
+		email = email.toLowerCase(); // Convert email to lowercase
+
 		let resp = (
 			await axios.post(
 				`/api/auth`,
@@ -71,21 +74,21 @@
 <section
 	on:click
 	on:pointerenter
-	class="relative flex items-center hover"
+	class="hover relative flex items-center"
 	class:active={active == 1}
 	class:inactive={active !== undefined && active !== 1}
 	class:hover={active == undefined || active == 0}
 >
-	<div bind:this={form} class="mx-auto mt-[15%] mb-[5%] w-full p-4 lg:w-1/2" class:hide={active != 1}>
+	<div bind:this={form} class="mx-auto mb-[5%] mt-[15%] w-full p-4 lg:w-1/2" class:hide={active != 1}>
 		<div class="mb-1 flex flex-row gap-2">
 			<CMSLogo className="w-12" fill="red" />
 
 			<h1 class="text-3xl font-bold text-white lg:text-4xl">
-				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
+				<div class="text-surface-300 text-xs">{PUBLIC_SITENAME}</div>
 				<div class="lg:-mt-1">{$LL.LOGIN_SignUp()}</div>
 			</h1>
 		</div>
-		<div class="-mt-2 text-xs text-right text-red-500">{$LL.LOGIN_Required()}</div>
+		<div class="-mt-2 text-right text-xs text-red-500">{$LL.LOGIN_Required()}</div>
 
 		<form action="">
 			<!-- Username field -->

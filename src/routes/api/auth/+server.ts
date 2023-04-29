@@ -122,3 +122,6 @@ async function signIn(email: string, password: string, cookies: Cookies) {
 	// Return a response with the user's username, session ID, and status code
 	return new Response(JSON.stringify({ userername: user.username, session: session.sessionId, status: 200 }));
 }
+
+//signout
+// async function signout(email: string, password: string, cookies: Cookies) {

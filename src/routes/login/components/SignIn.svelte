@@ -45,6 +45,9 @@
 	let showPassword = false;
 
 	async function signup() {
+
+		email = email.toLowerCase(); // Convert email to lowercase
+
 		let resp = (
 			await axios.post(
 				`/api/auth`,
@@ -67,6 +70,9 @@
 	}
 
 	async function forgotten() {
+
+		email = email.toLowerCase(); // Convert email to lowercase
+
 		let resetPW = true;
 		let resp = (
 			await axios.post(

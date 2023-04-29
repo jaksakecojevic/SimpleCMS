@@ -12,9 +12,6 @@ import { fieldsToSchema } from '@src/utils/utils';
 // Turn off strict mode for query filters. Default in Mongodb 7
 mongoose.set('strictQuery', false);
 
-// Turn off strict mode for query filters. Default in Mongodb 7
-mongoose.set('strictQuery', false);
-
 function connectToDatabase(dbHost) {
 	mongoose
 		.connect(dbHost, {
