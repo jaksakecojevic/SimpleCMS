@@ -115,8 +115,8 @@ This FloatingInput component has the following properties:
 	{#if label}
 		<label
 			for="input"
-			class="{labelClass} absolute left-6 text-gray-400 text-sm pointer-events-none transform transition-all duration-200 ease-in-out peer-focus:-top-1.5 peer-focus:-left-0 peer-focus:text-blue-600 peer-focus:text-xs peer-placeholder-shown:text-base peer-placeholder-shown:-top-1 peer-placeholder-shown:text-gray-400 {value &&
-				'-top-1.5 -left-0 text-blue-600 text-xs'}"
+			class="{labelClass} pointer-events-none absolute left-6 transform text-sm text-gray-400 transition-all duration-200 ease-in-out peer-placeholder-shown:-top-1 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-left-0 peer-focus:-top-1.5 peer-focus:text-xs peer-focus:text-blue-600 {value &&
+				'-left-0 -top-1.5 text-xs text-blue-600'}"
 		>
 			{label}
 			{#if required}

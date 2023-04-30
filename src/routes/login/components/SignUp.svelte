@@ -46,7 +46,6 @@
 	}
 
 	async function signup() {
-		
 		email = email.toLowerCase(); // Convert email to lowercase
 
 		let resp = (

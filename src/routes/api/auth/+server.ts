@@ -10,17 +10,32 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	let email = formData.get('email') as string;
 	let password = formData.get('password') as string;
 	let authType = formData.get('authType') as 'signIn' | 'signUp';
-	let sessionID = formData.get('sessionID') as string | null;
 
 	// Determine which function to call based on the value of authType
 	if (authType == 'signIn') {
 		return await signIn(email, password, cookies);
 	} else if (authType == 'signUp') {
 		return await signUp(email, password, cookies);
+	} else if (authType == 'signOut') {
+		return await signOut(cookies);
 	} else {
 		return new Response('', { status: 404 });
 	}
 };
+
+// Define an asynchronous function to sign out a user
+async function signOut(cookies: Cookies) {
+	// Get the value of the 'credentials' cookie
+	let res = cookies.get('credentials');
+	if (!res) return new Response(JSON.stringify({ status: 404 }));
+	let sessionID = JSON.parse(res).session;
+	if (!sessionID) return new Response(JSON.stringify({ status: 404 }));
+	// Invalidate the session using the auth.invalidateSession function
+	await auth.invalidateSession(sessionID);
+	cookies.delete('credentials');
+
+	return new Response(JSON.stringify({ status: 200 }));
+}
 
 // Define a function for signing up a new user and checks for FirstUser
 async function checkIfFirstUserExists() {

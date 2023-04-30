@@ -10,7 +10,7 @@
 </script>
 
 <div class={`relative ${width}`}>
-	<svg viewBox="0 0 100 100" class="block w-full h-auto">
+	<svg viewBox="0 0 100 100" class="block h-auto w-full">
 		<circle cx="50" cy="50" r="45" class={`block ${track}`} stroke-width={`${(stroke / 100) * 10}`} />
 		{#if value !== undefined}
 			<circle

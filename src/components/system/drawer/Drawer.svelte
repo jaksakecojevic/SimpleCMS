@@ -1,15 +1,37 @@
 <script lang="ts">
+	import { credentials } from '@src/stores/load';
+	import axios from 'axios';
+	import Collections from './Collections.svelte';
+	import { goto } from '$app/navigation';
+	import Button from '../buttons/Button.svelte';
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
-	import Collections from './Collections.svelte';
 	import AnimatedHamburger from '@src/components/AnimatedHamburger.svelte';
 	import Avatar from '../avatar/Avatar.svelte';
 	import Badges from '../badges/Badges.svelte';
 	import ThemeSwitcher from '@src/components/ThemeSwitcher.svelte';
-	import Button from '../buttons/Button.svelte';
 	import { onMount } from 'svelte';
+	import LocaleSwitcher from '@src/components/LocaleSwitcher.svelte';
 
 	export let switchSideBar = true;
+
+	async function signOut() {
+		let resp = (
+			await axios.post(
+				`/api/auth`,
+				{ authType: 'signOut' },
+				{
+					headers: {
+						'content-type': 'multipart/form-data'
+					}
+				}
+			)
+		).data;
+		if (resp.status == 200) {
+			$credentials = resp;
+			goto('/login');
+		}
+	}
 
 	let badgeColor = 'primary'; // default badge color
 
@@ -46,7 +68,7 @@
 	}
 </script>
 
-<section class="relative bg-gray-800 pt-2 px-1 flex flex-col h-screen {switchSideBar ? 'w-[215px]' : 'w-fit'}">
+<section class="relative flex h-screen flex-col bg-gray-400 px-1 pt-2 dark:bg-gray-800 {switchSideBar ? 'w-[225px]' : 'w-fit'}">
 	<header class="flex flex-col text-center dark:text-white">
 		<!-- Hamburger -->
 		{#if !switchSideBar}
@@ -55,7 +77,7 @@
 
 		<!-- Corporate Identity -->
 		{#if switchSideBar}
-			<a href="/" class="py-2 flex !no-underline">
+			<a href="/" class="flex py-2 !no-underline">
 				<SimpleCmsLogo fill="red" className="h-8" />
 
 				<span class="pl-1 text-2xl font-bold text-black dark:text-white">{PUBLIC_SITENAME}</span>
@@ -64,7 +86,7 @@
 
 		<!-- Sidebar collapse button -->
 		<button
-			class="z-10 absolute top-2 flex justify-center items-center -right-2 !rounded-full border-2 border-gray-300"
+			class="absolute -right-5 top-3 z-10 flex items-center justify-center !rounded-full border-2 border-gray-300"
 			on:click={() => (switchSideBar = !switchSideBar)}
 		>
 			{#if !switchSideBar}
@@ -87,7 +109,7 @@
 		<div class="flex justify-between">
 			<!-- Corporate Identity -->
 			{#if !switchSideBar}
-				<a href="/" class="py-2 flex !no-underline">
+				<a href="/" class="flex py-2 !no-underline">
 					<SimpleCmsLogo fill="red" className="h-8" />
 				</a>
 			{/if}
@@ -129,21 +151,21 @@
 		{#if switchSideBar}
 			<a href="/gallery"><Button iconLeft="bi:images" btnClass="uppercase w-full">Gallery</Button></a>
 		{:else}
-			<iconify-icon icon="bi:images" width="30" class=" text-white bg-gray-500" />
+			<iconify-icon icon="bi:images" width="30" class=" bg-gray-500 text-white" />
 		{/if}
 	</main>
 
-	<footer class="mt-auto text-white px-1 pb-2 text-center">
-		<div class="border-t mx-1 mb-1" />
+	<footer class="mt-auto px-1 pb-2 text-center dark:text-white">
+		<div class="mx-1 mb-1 border-t" />
 
-		<div class="{switchSideBar ? 'grid-rows-3 grid-cols-3 ' : 'grid-rows-2 grid-cols-2 '} grid overflow-hidden justify-center items-center">
+		<div class="{switchSideBar ? 'grid-cols-3 grid-rows-3 ' : 'grid-cols-2 grid-rows-2 '} grid items-center justify-center overflow-hidden">
 			<!-- Avatar with user settings -->
 			<div class="{switchSideBar ? 'order-1 row-span-2' : 'order-1 '} mx-auto">
 				<a href="/user"><Avatar width="w-10" src="/Default_User.svg" /></a>
 			</div>
 
 			<!-- System Language i18n Handeling -->
-			<div class="{switchSideBar ? 'order-3 row-span-2' : 'order-2'} ">EN</div>
+			<div class="{switchSideBar ? 'order-3 row-span-2' : 'order-2'} "><LocaleSwitcher /></div>
 
 			<!-- light/dark mode switch -->
 			<div class="{switchSideBar ? 'order-2 pt-4' : 'order-3'} ">
@@ -152,13 +174,13 @@
 
 			<!-- Lucia Sign Out -->
 			<div class="{switchSideBar ? 'order-4' : 'order-4 '} mt-2">
-				<iconify-icon icon="uil:signout" width="24" />
+				<iconify-icon icon="uil:signout" width="24" on:click={signOut} />
 			</div>
 
 			<div
 				class="{switchSideBar
 					? 'order-5 col-span-3'
-					: 'order-5  col-span-2'}  mt-1 mx-auto w-full flex justifiy-center items-center bg-gray-600/30 rounded"
+					: 'order-5  col-span-2'}  justifiy-center mx-auto mt-1 flex w-full items-center rounded bg-gray-600/30"
 			>
 				<!-- Github discussions -->
 				<div class="{switchSideBar ? 'ml-2 mt-2' : 'hidden'} ">

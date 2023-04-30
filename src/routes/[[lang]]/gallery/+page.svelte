@@ -1,6 +1,6 @@
 <script lang="ts">
 	// typesafe-i18n
-	import LL from '@src/i18n/i18n-svelte';
+	import LL from '@i18n/i18n-svelte';
 
 	// show/hide Left Sidebar
 	import AnimatedHamburger from '@src/components/AnimatedHamburger.svelte';
@@ -230,7 +230,7 @@
 	console.log('items', items);
 </script>
 
-<div class="flex mr-1 align-centre mb-2 dark:text-white">
+<div class="align-centre mb-2 mr-1 flex dark:text-white">
 	{#if !switchSideBar && $toggleLeftSidebar}
 		<AnimatedHamburger />
 	{/if}
@@ -238,11 +238,11 @@
 	<h1 class={!$toggleLeftSidebar ? 'ml-2' : ''}>Media Gallery</h1>
 </div>
 
-<div class="flex items-center justify-center mt-2 gap-10 border-b border-gray-500 dark:text-white">
+<div class="mt-2 flex items-center justify-center gap-10 border-b border-gray-500 dark:text-white">
 	<!-- Display Grid / Table -->
 	<div class="mr-2 flex flex-col p-2 text-center text-xs">
 		Display
-		<div class="flex p-2 divide-x divide-gray-500">
+		<div class="flex divide-x divide-gray-500 p-2">
 			<div
 				class="px-2"
 				on:click={() => {
@@ -277,7 +277,7 @@
 	<!-- switch between small, medium, and large images -->
 	<div class="mr-2 flex flex-col p-2 text-center text-xs">
 		Image Size
-		<div class=" flex p-2 divide-x divide-gray-500">
+		<div class=" flex divide-x divide-gray-500 p-2">
 			<div
 				class="px-2"
 				on:click={() => {
@@ -324,32 +324,32 @@
 </div>
 
 {#if view === 'grid'}
-	<div class={`grid grid-cols-${size === 'small' ? '3' : size === 'medium' ? '2' : '4'} mt-2 px-1 gap-4`}>
+	<div class={`grid grid-cols-${size === 'small' ? '3' : size === 'medium' ? '2' : '4'} mt-2 gap-4 px-1`}>
 		<!-- {#each images as image} -->
 		<div class="card rounded-sm shadow-2xl">
 			<section class="p-4">
 				<img
-					class={`w-full h-full object-cover ${size === 'small' ? 'h-32' : size === 'medium' ? 'h-48' : 'h-64'}`}
+					class={`h-full w-full object-cover ${size === 'small' ? 'h-32' : size === 'medium' ? 'h-48' : 'h-64'}`}
 					src="/SimpleCMS_Logo_Round.png"
 					alt="alt"
 				/>
 			</section>
 
-			<footer class="card-footer bg-surface-500 font-bold rounded-sm text-center text-white">SimpleCMS</footer>
+			<footer class="card-footer bg-surface-500 rounded-sm text-center font-bold text-white">SimpleCMS</footer>
 		</div>
 		<!-- {/each} -->
 	</div>
 {:else}
 	<div class="p-2">
 		<!-- refresh -->
-		<div class="flex justify-center items-center gap-3 mb-4">
+		<div class="mb-4 flex items-center justify-center gap-3">
 			<div>{$table.getRowModel().rows.length} Rows</div>
 			<button on:click={() => rerender()}>Force Rerender</button>
 			<button on:click={() => refreshData()}>Refresh Data</button>
 		</div>
 
 		<!-- chip column order -->
-		<div class="flex flex-col text-center justify-center bg-surface-700 rounded-md">
+		<div class="bg-surface-700 flex flex-col justify-center rounded-md text-center">
 			<div class="font-semibold">Drag & Drop columns & Click to hide</div>
 			<!-- toggle all -->
 			<!-- TODO place into section row will kill dnd action-->
@@ -373,20 +373,20 @@
 					<div
 						class="chip {$table.getIsAllColumnsVisible()
 							? 'variant-filled-secondary'
-							: 'variant-ghost-secondary'} flex justify-center items-center mr-2 w-100"
+							: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
 						animate:flip={{ duration: flipDurationMs }}
 					>
 						{#if $table.getIsAllColumnsVisible()}
 							<span><iconify-icon icon="fa:check" /></span>
 						{/if}
-						<span class="capitalize ml-2">{item.name}</span>
+						<span class="ml-2 capitalize">{item.name}</span>
 					</div>
 				{/each}
 			</section>
 		</div>
 		<div class="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-center">
 			<!-- toggle all -->
-			<div class="flex items-center mb-2 md:mb-0 md:mr-4">
+			<div class="mb-2 flex items-center md:mb-0 md:mr-4">
 				<label>
 					<input
 						checked={$table.getIsAllColumnsVisible()}

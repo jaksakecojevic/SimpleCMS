@@ -45,7 +45,6 @@
 	let showPassword = false;
 
 	async function signup() {
-
 		email = email.toLowerCase(); // Convert email to lowercase
 
 		let resp = (
@@ -70,7 +69,6 @@
 	}
 
 	async function forgotten() {
-
 		email = email.toLowerCase(); // Convert email to lowercase
 
 		let resetPW = true;
@@ -101,27 +99,27 @@
 <section
 	on:click
 	on:pointerenter
-	class="relative flex items-center hover"
+	class="hover relative flex items-center"
 	class:active={active == 0}
 	class:inactive={active !== undefined && active !== 0}
 	class:hover={active == undefined || active == 1}
 >
-	<div bind:this={form} class="mx-auto mt-[15%] mb-[5%] w-full p-4 lg:w-1/2" class:hide={active != 0}>
+	<div bind:this={form} class="mx-auto mb-[5%] mt-[15%] w-full p-4 lg:w-1/2" class:hide={active != 0}>
 		<div class="mb-1 flex flex-row gap-2">
 			<CMSLogo className="w-12" fill="red" />
 
 			<h1 class="text-3xl font-bold text-black lg:text-4xl">
-				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
+				<div class="text-surface-300 text-xs">{PUBLIC_SITENAME}</div>
 				{#if !forgot}
 					<div class="lg:-mt-1">{$LL.LOGIN_SignIn()}</div>
 				{:else if forgot}
-					<div class="lg:-mt-1 text-2xl lg:text-4xl">{$LL.LOGIN_ForgottenPassword()}</div>
+					<div class="text-2xl lg:-mt-1 lg:text-4xl">{$LL.LOGIN_ForgottenPassword()}</div>
 				{:else}
 					<div class="lg:-mt-1">{$LL.LOGIN_ResetPassword()}</div>
 				{/if}
 			</h1>
 		</div>
-		<div class="-mt-2 text-xs text-right text-red-500">{$LL.LOGIN_Required()}</div>
+		<div class="-mt-2 text-right text-xs text-red-500">{$LL.LOGIN_Required()}</div>
 
 		<!-- <form method="POST" use:enhance> -->
 		<form action="">

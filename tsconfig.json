@@ -13,11 +13,10 @@
 		"baseUrl": ".",
 		"outDir": "../build",
 		"paths": {
-
 			"@src": ["src/"],
 			"@src/*": ["src/*"],
-			"@static/*":["static/*"],
-			"@root/*":["./*"]
+			"@static/*": ["static/*"],
+			"@root/*": ["./*"]
 		}
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias

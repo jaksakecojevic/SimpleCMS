@@ -19,8 +19,8 @@
 
 <div class="flex">
 	<Drawer />
-	<div class="flex-grow overflow-auto max-h-screen">
-		{#if $mode == 'view'}
+	<div class="max-h-screen flex-grow overflow-auto">
+		{#if $mode == 'view' || $mode == 'delete'}
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}
 			<Fields />

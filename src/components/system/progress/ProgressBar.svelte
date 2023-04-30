@@ -11,7 +11,7 @@
 
 <div class="relative pt-1">
 	<div
-		class={`overflow-hidden ${height} mb-4 text-xs flex ${rounded} ${track}`}
+		class={`overflow-hidden ${height} mb-4 flex text-xs ${rounded} ${track}`}
 		aria-valuemin={min}
 		aria-valuemax={max}
 		aria-valuenow={value}
@@ -21,7 +21,7 @@
 		{#if value !== undefined}
 			<div
 				style={`width: ${((value - min) / (max - min)) * 100}%`}
-				class={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${meter}`}
+				class={`flex flex-col justify-center whitespace-nowrap text-center text-white shadow-none ${meter}`}
 			/>
 		{/if}
 	</div>

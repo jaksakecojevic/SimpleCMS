@@ -19,7 +19,7 @@
 	<!-- Collection Partents -->
 
 	<div
-		class="relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm py-2 text-center bg-[#363b4e] text-white"
+		class="relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-[#363b4e] py-2 text-center text-white"
 		class:arrow_up={expanded[index]}
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
@@ -41,7 +41,7 @@
 	<div class:expand={expanded[index]} use:setHeight class="overflow-hidden">
 		{#each category.collections as _collection}
 			<div
-				class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center capitalize"
+				class="border-surface-200 dark:bg-surface-400 relative flex h-[40px] cursor-pointer items-center justify-center border-b bg-[#777a89] p-0 text-center capitalize text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white"
 				on:click={(e) => {
 					mode.set('view');
 					$collection = _collection;

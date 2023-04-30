@@ -5,6 +5,7 @@
 	import SignIn from './components/SignIn.svelte';
 	import SignUp from './components/SignUp.svelte';
 	import Logo from './components/icons/Logo.svelte';
+	import LocaleSwitcher from '@src/components/LocaleSwitcher.svelte';
 
 	export let data: any;
 	//console.log(data);
@@ -25,9 +26,9 @@
 	<SignUp {active} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} {firstUserExists} />
 	{#if active == undefined}
 		<!-- CSS Logo -->
-		<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform flex items-center justify-center">
-			<div class="bg-white relative top-[-150px] h-[170px] w-[170px] justify-center rounded-full">
-				<svg width="160" height="160" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+		<div class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
+			<div class="relative top-[-150px] h-[170px] w-[170px] justify-center rounded-full bg-white">
+				<svg width="160" height="160" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
 					<circle
 						cx="80"
 						cy="80"
@@ -51,7 +52,7 @@
 					/>
 				</svg>
 
-				<svg width="170" height="170" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+				<svg width="170" height="170" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
 					<circle
 						cx="85"
 						cy="85"
@@ -74,7 +75,7 @@
 					/>
 				</svg>
 
-				<div class="absolute top-[77px] left-1/2 -translate-x-1/2 -translate-y-1/2 transform flex flex-col items-center justify-center text-center">
+				<div class="absolute left-1/2 top-[77px] flex -translate-x-1/2 -translate-y-1/2 transform flex-col items-center justify-center text-center">
 					<Logo fill="black" className="w-8 h-8" />
 					<div class="text-3xl font-bold text-red-500">{PUBLIC_SITENAME}</div>
 					<div class="-mt-[1px] text-[11px] font-bold text-black">with Sveltekit Power</div>
@@ -82,11 +83,8 @@
 			</div>
 		</div>
 		<!-- TODO:fix Language switcher -->
-		<div class="absolute bottom-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 transform flex items-center justify-center cursor-pointer">
-			<div class="bg-[#242728] text-white border-2 rounded-full p-2">
-				DE
-				<!-- <LocaleSwitcher /> -->
-			</div>
+		<div class="absolute bottom-1/4 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform cursor-pointer items-center justify-center">
+			<LocaleSwitcher />
 		</div>
 	{/if}
 </div>

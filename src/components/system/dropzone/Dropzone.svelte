@@ -18,7 +18,7 @@
 </script>
 
 <div
-	class="border-2 border-dashed p-4 rounded"
+	class="rounded border-2 border-dashed p-4"
 	on:dragover|preventDefault={handleDragOver}
 	on:dragleave={handleDragLeave}
 	on:drop|preventDefault={handleDrop}

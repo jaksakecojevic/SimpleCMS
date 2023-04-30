@@ -2,7 +2,7 @@
 	import Button from './system/buttons/Button.svelte';
 	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
-	import { collectionValue, mode } from '@src/stores/store';
+	import { collectionValue, mode, deleteEntry } from '@src/stores/store';
 	import { saveFormData } from '@src/utils/utils';
 
 	async function saveData() {
@@ -64,6 +64,8 @@
 				<div><span>Revisions:</span><span>{$collection.revision}</span></div>
 			</div>
 		</footer>
+	{:else if $mode == 'delete'}
+		<Button on:click={$deleteEntry}>Delete</Button>
 	{/if}
 </div>
 
