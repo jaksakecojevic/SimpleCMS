@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
-	import { mode, entryData, toggleLeftSidebar } from '@src/stores/store';
+	import { mode, entryData, deleteEntry, toggleLeftSidebar } from '@src/stores/store';
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
+	import DeleteIcon from './DeleteIcon.svelte';
 
 	export let switchSideBar = false;
 	// typesafe-i18n
@@ -31,14 +32,18 @@
 	//import FloatingInput from './system/inputs/floatingInput';
 	import AnimatedHamburger from './AnimatedHamburger.svelte';
 	import FloatingInput from './system/inputs/floatingInput.svelte';
+	import EntryListMultiButton from './EntryList_MultiButton.svelte';
 
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
+	let deleteMap: any = {};
+	let deleteAll = false;
 	let sorting: any = [];
 	let columnOrder: never[] = [];
 	let columnVisibility = {};
 	let globalFilter = '';
 
+	// This function refreshes the data displayed in a table by fetching new data from an API endpoint and updating the tableData and options variables.
 	let refresh = async (collection: typeof $collection) => {
 		data = undefined;
 		data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as { entryList: [any]; totalCount: number };
@@ -48,6 +53,7 @@
 				for (let field of collection.fields) {
 					obj[field.label] = await field.display(entry[field.label]?.en || entry[field.label], field, entry);
 				}
+				obj._id = entry._id;
 				return obj;
 			})
 		);
@@ -58,6 +64,8 @@
 				accessorKey: field.label
 			}))
 		}));
+		deleteMap = {};
+		deleteAll = false;
 	};
 
 	const setSorting = (updater: (arg0: any) => any) => {
@@ -168,6 +176,9 @@
 	}
 
 	$: refresh($collection);
+	$: process_deleteAll(deleteAll);
+	$: Object.values(deleteMap).includes(true) ? mode.set('delete') : mode.set('view');
+
 	const options = writable<TableOptions<any>>({
 		data: tableData,
 		columns: $collection.fields.map((field) => ({
@@ -194,9 +205,35 @@
 
 	//workaround for svelte-table bug
 	let flexRender = flexRenderBugged as (...args: Parameters<typeof flexRenderBugged>) => any;
+	function process_deleteAll(deleteAll: boolean) {
+		// triggerConfirm = true;
+		if (deleteAll) {
+			for (let item in tableData) {
+				deleteMap[item] = true;
+			}
+		} else {
+			for (let item in deleteMap) {
+				deleteMap[item] = false;
+			}
+		}
+	}
+
+	$deleteEntry = async () => {
+		let deleteList: Array<string> = [];
+		for (let item in deleteMap) {
+			//console.log(tableData[item]);
+			deleteMap[item] && deleteList.push(tableData[item]._id);
+		}
+		if (deleteList.length == 0) return;
+		let formData = new FormData();
+		formData.append('ids', JSON.stringify(deleteList));
+		await axios.delete(`/api/${$collection.name}`, { data: formData });
+		refresh($collection);
+		mode.set('view');
+	};
 </script>
 
-<div class="my-2 mr-2 flex items-center justify-between text-white">
+<div class="my-2 mr-2 flex items-center justify-between dark:text-white">
 	<div class="flex items-center">
 		{#if !switchSideBar && $toggleLeftSidebar}
 			<AnimatedHamburger width="40" />
@@ -266,8 +303,10 @@
 			}}
 		/>
 		<!-- MultiButton -->
-		<Button on:click={() => mode.set('create')} iconLeft="ic:outline-plus" btnClass="ml-2">Create</Button>
+		<EntryListMultiButton />
 	</div>
+	<Button on:click={() => mode.set('create')} backgroundColor="green" iconLeft="ic:outline-plus" btnClass="ml-2">Create</Button>
+	<Button on:click={() => mode.set('delete')} backgroundColor="red" iconLeft="bi:trash3-fill" btnClass="ml-2">Delete</Button>
 </div>
 
 {#if columnShow}
@@ -303,212 +342,224 @@
 {/if}
 
 <!-- Tanstack Table -->
-<table>
-	<thead>
-		{#each $table.getHeaderGroups() as headerGroup}
-			<tr class="divide-x capitalize">
-				{#each headerGroup.headers as header}
-					<th>
-						{#if !header.isPlaceholder}
-							<div
-								class:cursor-pointer={header.column.getCanSort()}
-								class:select-none={header.column.getCanSort()}
-								on:click={header.column.getToggleSortingHandler()}
-							>
-								<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
-								{#if header.column.getIsSorted() === 'asc'}
-									<iconify-icon icon="material-symbols:arrow-upward-rounded" width="16" />
-								{:else if header.column.getIsSorted() === 'desc'}
-									<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
-								{/if}
-							</div>
-						{/if}
+<div class="table-container">
+	<table class="table-fixed">
+		<thead class="bg-grey-600 dark:bg-grey-300 py-1rounded-t border-b-2 capitalize text-black dark:text-white">
+			{#each $table.getHeaderGroups() as headerGroup}
+				<tr class=" divide-x ">
+					<th class="w-10 px-2">
+						<DeleteIcon bind:checked={deleteAll} />
 					</th>
-				{/each}
-			</tr>
-			{#if filterShow}
-				<tr class="divide-x capitalize">
+
 					{#each headerGroup.headers as header}
 						<th>
-							<!-- Add your filter input here -->
-							<FloatingInput
-								type="text"
-								icon="material-symbols:search-rounded"
-								label="Filter ..."
-								on:input={(e) => {
-									// Update filter value for this column
-									header.column.setFilter(e.target.value);
-								}}
-							/>
+							{#if !header.isPlaceholder}
+								<div
+									class:cursor-pointer={header.column.getCanSort()}
+									class:select-none={header.column.getCanSort()}
+									on:click={header.column.getToggleSortingHandler()}
+								>
+									<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
+									{#if header.column.getIsSorted() === 'asc'}
+										<iconify-icon icon="material-symbols:arrow-upward-rounded" width="16" />
+									{:else if header.column.getIsSorted() === 'desc'}
+										<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
+									{/if}
+								</div>
+							{/if}
 						</th>
 					{/each}
 				</tr>
-			{/if}
-		{/each}
-	</thead>
+				{#if filterShow}
+					<tr class="divide-x capitalize">
+						{#each headerGroup.headers as header}
+							<th>
+								<!-- Add your filter input here -->
+								<FloatingInput
+									type="text"
+									icon="material-symbols:search-rounded"
+									label="Filter ..."
+									on:input={(e) => {
+										// Update filter value for this column
+										header.column.setFilter(e.target.value);
+									}}
+								/>
+							</th>
+						{/each}
+					</tr>
+				{/if}
+			{/each}
+		</thead>
 
-	<tbody>
-		{#each $table.getRowModel().rows as row, index}
-			<!-- TODO: {density} not working even when reactive-->
-			<tr
-				class="divide-x"
-				on:click={() => {
-					entryData.set(data?.entryList[index]);
-					mode.set('edit');
-				}}
-			>
-				{#each row.getVisibleCells() as cell}
-					<td class={density === 'compact' ? 'py-1' : density === 'normal' ? 'py-2' : 'py-3'}>
-						{@html cell.getValue()}
+		<tbody>
+			{#each $table.getRowModel().rows as row, index}
+				<tr
+					class="divide-x"
+					on:click={() => {
+						entryData.set(data?.entryList[index]);
+						mode.set('edit');
+					}}
+				>
+					<td class="!w-6 pl-2">
+						<DeleteIcon bind:checked={deleteMap[index]} />
 					</td>
-				{/each}
-			</tr>
-		{/each}
-	</tbody>
-	<tfoot>
-		{#each $table.getFooterGroups() as footerGroup}
-			<tr>
-				{#each footerGroup.headers as header}
-					<th>
-						{#if !header.isPlaceholder}
-							<svelte:component this={flexRender(header.column.columnDef.footer, header.getContext())} />
-						{/if}
-					</th>
-				{/each}
-			</tr>
-		{/each}
-	</tfoot>
-</table>
 
-<!-- Pagination -->
-<div class="my-3 flex items-center justify-around text-gray-400">
-	<!-- show & count rows -->
-	<div class="text-surface-400 hidden text-sm md:block">
-		{$LL.TANSTACK_Page()}
-		<span class="text-surface-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
-		{$LL.TANSTACK_of()}
-		<!-- TODO: Get actual pages -->
-		<!-- <span class="text-surface-700 dark:text-white">{$table.getState().pagination.pageCount}</span> -->
-		<span class="text-surface-700 dark:text-white"
-			>{Math.ceil($table.getPrePaginationRowModel().rows.length / $table.getState().pagination.pageSize)}</span
-		>
-		- (<span class="text-surface-700 dark:text-white">{$table.getPrePaginationRowModel().rows.length}</span>
-		{$LL.TANSTACK_Total()}
+					{#each row.getVisibleCells() as cell}
+						<td class={density === 'compact' ? 'py-1' : density === 'normal' ? 'py-2' : 'py-3'}>
+							{@html cell.getValue()}
+						</td>
+					{/each}
+				</tr>
+			{/each}
+		</tbody>
 
-		{#if $table.getPrePaginationRowModel().rows.length === 1}
-			{$LL.TANSTACK_Row()})
-		{:else}
-			{$LL.TANSTACK_Rows()}){/if}
-	</div>
-
-	<!-- number of pages -->
-	<select
-		value={$table.getState().pagination.pageSize}
-		on:change={setPageSize}
-		class="select hidden max-w-[100px] rounded py-2 text-sm dark:bg-gray-800 dark:text-white sm:block"
-	>
-		{#each [10, 25, 50, 100, 500] as pageSize}
-			<option value={pageSize}>
-				{pageSize} Rows
-			</option>
-		{/each}
-	</select>
-
-	<!-- next/previous pages -->
-	<div class="mt-2 inline-flex transition duration-150 ease-in-out">
-		<button
-			class=""
-			aria-label="Go to First Page"
-			on:click={() => setCurrentPage(0)}
-			class:is-disabled={!$table.getCanPreviousPage()}
-			disabled={!$table.getCanPreviousPage()}
-		>
-			<iconify-icon icon="material-symbols:first-page" width="24" />
-		</button>
-
-		<button
-			class=""
-			aria-label="Go to Previous Page"
-			on:click={() => setCurrentPage($table.getState().pagination.pageIndex - 1)}
-			class:is-disabled={!$table.getCanPreviousPage()}
-			disabled={!$table.getCanPreviousPage()}
-		>
-			<iconify-icon icon="material-symbols:chevron-left" width="24" />
-		</button>
-
-		<!-- input display -->
-		<div class="mb-2 text-sm">
-			<span> {$LL.TANSTACK_Page()} </span>
-
-			<input
-				type="number"
-				value={$table.getState().pagination.pageIndex + 1}
-				min={0}
-				max={$table.getPageCount() - 1}
-				on:change={handleCurrPageInput}
-				class=" input w-14 rounded border py-[5px] dark:bg-gray-800 dark:text-white"
-			/>
-			<span>
-				{' '}{$LL.TANSTACK_of()}{' '}
-				<span class="dark:text-white">{$table.getPageCount()}</span>
-			</span>
-		</div>
-
-		<button
-			aria-label="Go to Next Page"
-			on:click={() => setCurrentPage($table.getState().pagination.pageIndex + 1)}
-			class:is-disabled={!$table.getCanNextPage()}
-			disabled={!$table.getCanNextPage()}
-		>
-			<iconify-icon icon="material-symbols:chevron-right" width="24" />
-		</button>
-		<button
-			aria-label="Go to Last Page"
-			on:click={() => setCurrentPage($table.getPageCount() - 1)}
-			class:is-disabled={!$table.getCanNextPage()}
-			disabled={!$table.getCanNextPage()}
-		>
-			<iconify-icon icon="material-symbols:last-page" width="24" />
-		</button>
-	</div>
-</div>
-<div class="flex flex-col items-center justify-center gap-2 md:hidden">
-	<!-- number of pages -->
-	<select value={$table.getState().pagination.pageSize} on:change={setPageSize} class="select max-w-[100px] text-sm sm:hidden">
-		{#each [10, 25, 50, 100, 500] as pageSize}
-			<option value={pageSize}>
-				{pageSize}
-				{$LL.TANSTACK_Rows()}
-			</option>
-		{/each}
-	</select>
+		<tfoot>
+			{#each $table.getFooterGroups() as footerGroup}
+				<tr>
+					{#each footerGroup.headers as header}
+						<th>
+							{#if !header.isPlaceholder}
+								<svelte:component this={flexRender(header.column.columnDef.footer, header.getContext())} />
+							{/if}
+						</th>
+					{/each}
+				</tr>
+			{/each}
+		</tfoot>
+	</table>
 
 	<!-- Pagination -->
-	<div class="text-sm text-gray-400">
-		<span class="text-gray-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
-		{$LL.TANSTACK_of()}
-		<!-- TODO: Get actual page -->
-		<!-- <span class="text-surface-700 dark:text-white"
+	<div class="my-3 flex items-center justify-around text-gray-400">
+		<!-- show & count rows -->
+		<div class="text-surface-400 hidden text-sm md:block">
+			{$LL.TANSTACK_Page()}
+			<span class="text-surface-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
+			{$LL.TANSTACK_of()}
+			<!-- TODO: Get actual pages -->
+			<!-- <span class="text-surface-700 dark:text-white">{$table.getState().pagination.pageCount}</span> -->
+			<span class="text-surface-700 dark:text-white"
+				>{Math.ceil($table.getPrePaginationRowModel().rows.length / $table.getState().pagination.pageSize)}</span
+			>
+			- (<span class="text-surface-700 dark:text-white">{$table.getPrePaginationRowModel().rows.length}</span>
+			{$LL.TANSTACK_Total()}
+
+			{#if $table.getPrePaginationRowModel().rows.length === 1}
+				{$LL.TANSTACK_Row()})
+			{:else}
+				{$LL.TANSTACK_Rows()}){/if}
+		</div>
+
+		<!-- number of pages -->
+		<select
+			value={$table.getState().pagination.pageSize}
+			on:change={setPageSize}
+			class="select hidden max-w-[100px] rounded py-2 text-sm dark:bg-gray-800 dark:text-white sm:block"
+		>
+			{#each [10, 25, 50, 100, 500] as pageSize}
+				<option value={pageSize}>
+					{pageSize} Rows
+				</option>
+			{/each}
+		</select>
+
+		<!-- next/previous pages -->
+		<div class="mt-2 inline-flex transition duration-150 ease-in-out">
+			<button
+				class=""
+				aria-label="Go to First Page"
+				on:click={() => setCurrentPage(0)}
+				class:is-disabled={!$table.getCanPreviousPage()}
+				disabled={!$table.getCanPreviousPage()}
+			>
+				<iconify-icon icon="material-symbols:first-page" width="24" />
+			</button>
+
+			<button
+				class=""
+				aria-label="Go to Previous Page"
+				on:click={() => setCurrentPage($table.getState().pagination.pageIndex - 1)}
+				class:is-disabled={!$table.getCanPreviousPage()}
+				disabled={!$table.getCanPreviousPage()}
+			>
+				<iconify-icon icon="material-symbols:chevron-left" width="24" />
+			</button>
+
+			<!-- input display -->
+			<div class="mb-2 text-sm">
+				<span> {$LL.TANSTACK_Page()} </span>
+
+				<input
+					type="number"
+					value={$table.getState().pagination.pageIndex + 1}
+					min={0}
+					max={$table.getPageCount() - 1}
+					on:change={handleCurrPageInput}
+					class=" input w-14 rounded border py-[5px] dark:bg-gray-800 dark:text-white"
+				/>
+				<span>
+					{' '}{$LL.TANSTACK_of()}{' '}
+					<span class="dark:text-white">{$table.getPageCount()}</span>
+				</span>
+			</div>
+
+			<button
+				aria-label="Go to Next Page"
+				on:click={() => setCurrentPage($table.getState().pagination.pageIndex + 1)}
+				class:is-disabled={!$table.getCanNextPage()}
+				disabled={!$table.getCanNextPage()}
+			>
+				<iconify-icon icon="material-symbols:chevron-right" width="24" />
+			</button>
+
+			<button
+				aria-label="Go to Last Page"
+				on:click={() => setCurrentPage($table.getPageCount() - 1)}
+				class:is-disabled={!$table.getCanNextPage()}
+				disabled={!$table.getCanNextPage()}
+			>
+				<iconify-icon icon="material-symbols:last-page" width="24" />
+			</button>
+		</div>
+	</div>
+
+	<div class="flex flex-col items-center justify-center gap-2 md:hidden">
+		<!-- number of pages -->
+		<select value={$table.getState().pagination.pageSize} on:change={setPageSize} class="select max-w-[100px] text-sm sm:hidden">
+			{#each [10, 25, 50, 100, 500] as pageSize}
+				<option value={pageSize}>
+					{pageSize}
+					{$LL.TANSTACK_Rows()}
+				</option>
+			{/each}
+		</select>
+
+		<!-- Pagination -->
+		<div class="text-sm text-gray-400">
+			<span class="text-gray-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
+			{$LL.TANSTACK_of()}
+			<!-- TODO: Get actual page -->
+			<!-- <span class="text-surface-700 dark:text-white"
 				>{$table.getState().pagination.pageIndex + 1}</span
 			> -->
-		<span class="text-gray-700 dark:text-white"
-			>{Math.ceil($table.getPrePaginationRowModel().rows.length / $table.getState().pagination.pageSize)}</span
-		>
-		- (<span class="text-gray-700 dark:text-white">{$table.getPrePaginationRowModel().rows.length}</span>
-		{$LL.TANSTACK_Total()}
+			<span class="text-gray-700 dark:text-white"
+				>{Math.ceil($table.getPrePaginationRowModel().rows.length / $table.getState().pagination.pageSize)}</span
+			>
+			- (<span class="text-gray-700 dark:text-white">{$table.getPrePaginationRowModel().rows.length}</span>
+			{$LL.TANSTACK_Total()}
 
-		{#if $table.getPrePaginationRowModel().rows.length === 1}
-			{$LL.TANSTACK_Row()})
-		{:else}
-			{$LL.TANSTACK_Rows()}){/if}
+			{#if $table.getPrePaginationRowModel().rows.length === 1}
+				{$LL.TANSTACK_Row()})
+			{:else}
+				{$LL.TANSTACK_Rows()}){/if}
+		</div>
 	</div>
 </div>
 
 <style lang="postcss">
-	th,
+	/* th,
 	td {
 		min-width: 120px;
-		text-align: center;
+		text-align: left;
 		cursor: pointer;
 	}
 	thead th:first-of-type {
@@ -540,5 +591,5 @@
 	}
 	tbody tr:hover {
 		background-color: #274b6f;
-	}
+	} */
 </style>
