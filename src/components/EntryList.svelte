@@ -342,7 +342,7 @@
 {/if}
 
 <!-- Tanstack Table -->
-<div class="table-container">
+<div class="table-container px-1">
 	<table class="table-fixed">
 		<thead class="bg-grey-600 dark:bg-grey-300 py-1rounded-t border-b-2 capitalize text-black dark:text-white">
 			{#each $table.getHeaderGroups() as headerGroup}
