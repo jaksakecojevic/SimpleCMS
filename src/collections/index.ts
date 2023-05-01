@@ -18,7 +18,7 @@ let categories = [
 		collections: [Menu, Menu]
 	},
 	{
-		name: 'Gallery',
+		name: 'Images',
 		icon: 'bi:images',
 		collections: [ImageArray]
 	}

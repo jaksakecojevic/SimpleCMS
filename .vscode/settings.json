@@ -4,6 +4,5 @@
 		"a11y-no-noninteractive-tabindex": "ignore"
 	},
 	"editor.guides.bracketPairs": true,
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.formatOnSave": true
+	"editor.defaultFormatter": "esbenp.prettier-vscode"
 }

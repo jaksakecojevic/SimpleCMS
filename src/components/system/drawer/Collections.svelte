@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { categories } from '@src/collections';
-	import { collection } from '@src/collections';
-	import { mode } from '@src/stores/store';
-
-	export let switchSideBar = true;
+	import { collection, categories } from '@src/collections';
+	import { mode, switchSideBar } from '@src/stores/store';
+	import Tooltip from '@src/components/system/tooltip/Tooltip.svelte';
 
 	let expanded: any = {};
 
@@ -14,44 +12,53 @@
 		node.style.transition = ' 0.5s';
 	}
 </script>
-
+<!-- display all collection parents and their Children as dropdown -->
 {#each categories as category, index}
-	<!-- Collection Partents -->
 
+	<!-- Collection Partents -->
 	<div
-		class="relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-[#363b4e] py-2 text-center text-white"
+		class="relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-[#363b4e] py-2 text-white"
 		class:arrow_up={expanded[index]}
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
 		}}
 	>
-		{#if switchSideBar}
-			<div class="flex items-center">
+		<div class="flex" class:justify-start={$switchSideBar}>
+			{#if $switchSideBar}
 				<iconify-icon icon={category.icon} width="24" class="px-2 text-red-600" />
-
 				<p class="uppercase">{category.name}</p>
-			</div>
-		{:else}<div class="flex items-center">
+			{:else}
+			<Tooltip  text={category.name} position="right" active={!$switchSideBar} />
 				<iconify-icon icon={category.icon} width="24" class="px-2 text-red-600" />
-			</div>
-		{/if}
+			{/if}
+		</div>
 	</div>
 
-	<!-- Collection Childern -->
+	<!-- Collection Children -->
 	<div class:expand={expanded[index]} use:setHeight class="overflow-hidden">
 		{#each category.collections as _collection}
 			<div
-				class="border-surface-200 dark:bg-surface-400 relative flex h-[40px] cursor-pointer items-center justify-center border-b bg-[#777a89] p-0 text-center capitalize text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white"
+				class="{$switchSideBar
+					? 'h-[40px]'
+					: 'h-fit'} border-gray-200 w-full dark:bg-gray-400 relative flex justify-start cursor-pointer border-b bg-[#777a89] text-center capitalize text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white"
 				on:click={(e) => {
 					mode.set('view');
 					$collection = _collection;
 				}}
 			>
-				<div class="flex items-center">
-					<iconify-icon icon={_collection.icon} width="24" class="px-2 text-red-600" />
-
-					<p class="capitalize">{_collection.name}</p>
-				</div>
+				{#if $switchSideBar}
+					<!-- switchSideBar expanded -->
+					<div class="flex flex-row items-center justify-start pl-4">
+						<iconify-icon icon={_collection.icon} width="24" class="px-2 text-red-600" />
+						<p class="mr-auto text-center capitalize">{_collection.name}</p>
+					</div>
+				{:else}
+					<!-- switchSideBar collapsed -->
+					<div class="flex flex-col items-center justify-start pl-4">
+						<p class="text-center text-xs capitalize">{_collection.name}</p>
+						<iconify-icon icon={_collection.icon} width="24" class="mt-2 px-2 text-red-600" />
+					</div>
+				{/if}
 			</div>
 		{/each}
 	</div>

@@ -12,8 +12,9 @@
 	import ThemeSwitcher from '@src/components/ThemeSwitcher.svelte';
 	import { onMount } from 'svelte';
 	import LocaleSwitcher from '@src/components/LocaleSwitcher.svelte';
+	import Tooltip from '@src/components/system/tooltip/Tooltip.svelte';
 
-	export let switchSideBar = true;
+	import { switchSideBar } from '@src/stores/store';
 
 	async function signOut() {
 		let resp = (
@@ -68,47 +69,46 @@
 	}
 </script>
 
-<section class="relative flex h-screen flex-col bg-gray-400 px-1 pt-2 dark:bg-gray-800 {switchSideBar ? 'w-[225px]' : 'w-fit'}">
+<section class="relative  flex h-screen flex-col bg-gray-400 px-1 pt-2 dark:bg-gray-800 {$switchSideBar ? 'w-fit' : 'w-[100px]'}">
 	<header class="flex flex-col text-center dark:text-white">
 		<!-- Hamburger -->
-		{#if !switchSideBar}
+		{#if !$switchSideBar}
 			<AnimatedHamburger />
 		{/if}
 
 		<!-- Corporate Identity -->
-		{#if switchSideBar}
+		{#if $switchSideBar}
 			<a href="/" class="flex py-2 !no-underline">
 				<SimpleCmsLogo fill="red" className="h-8" />
-
 				<span class="pl-1 text-2xl font-bold text-black dark:text-white">{PUBLIC_SITENAME}</span>
 			</a>
 		{/if}
 
 		<!-- Sidebar collapse button -->
 		<button
-			class="absolute -right-5 top-3 z-10 flex items-center justify-center !rounded-full border-2 border-gray-300"
-			on:click={() => (switchSideBar = !switchSideBar)}
+			class="absolute -right-4 top-3 z-10 flex items-center justify-center !rounded-full border-2 border-gray-300"
+			on:click={() => switchSideBar.update((value) => !value)}
 		>
-			{#if !switchSideBar}
+			{#if !$switchSideBar}
 				<!-- Icon Collpased -->
 				<iconify-icon
 					icon="bi:arrow-left-circle-fill"
 					width="30"
-					class="rotate-180 rounded-full bg-white text-white hover:cursor-pointer hover:bg-red-600 dark:text-gray-600 dark:hover:bg-red-600"
+					class="rotate-180 rounded-full bg-white text-black hover:cursor-pointer hover:bg-red-600 dark:text-gray-600 dark:hover:bg-red-600"
 				/>
 			{:else}
 				<!-- Icon expanded -->
 				<iconify-icon
 					icon="bi:arrow-left-circle-fill"
 					width="30"
-					class="rounded-full bg-white text-white hover:cursor-pointer hover:bg-red-600 dark:text-gray-600 dark:hover:bg-red-600"
+					class="rounded-full bg-white text-black hover:cursor-pointer hover:bg-red-600 dark:text-gray-600 dark:hover:bg-red-600"
 				/>
 			{/if}
 		</button>
 
 		<div class="flex justify-between">
 			<!-- Corporate Identity -->
-			{#if !switchSideBar}
+			{#if !$switchSideBar}
 				<a href="/" class="flex py-2 !no-underline">
 					<SimpleCmsLogo fill="red" className="h-8" />
 				</a>
@@ -116,25 +116,28 @@
 
 			<!-- Search -->
 			<!-- TODO: Needs more work -->
-			<div class="relative mx-auto my-2">
-				{#if !switchSideBar}
+			<div class="relative mx-auto my-1">
+				{#if !$switchSideBar}
 					<input
 						on:keyup={updateFilter}
-						on:focus={() => (switchSideBar = !switchSideBar)}
+						on:focus={() => switchSideBar.update((value) => !value)}
 						placeholder="Search"
-						class="relative z-10 h-10 w-10 cursor-pointer !rounded-full border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12"
+						class="relative z-10 h-8 w-8 cursor-pointer !rounded-full border border-gray-700 bg-gray-300/50 pl-8 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12"
 					/>
+					<Tooltip  text="Search" position="right" active={!$switchSideBar} />
+
 				{:else}
 					<input
 						on:keyup={updateFilter}
 						placeholder="Search"
 						class="relative z-10 h-10 w-full cursor-pointer rounded-md border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-gray-600/50 dark:text-white"
 					/>
+
 				{/if}
 				<!-- search icon -->
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-black px-3 dark:stroke-white"
+					class="absolute inset-y-0 my-auto h-8 w-8 border-transparent stroke-black px-1 dark:stroke-white"
 					fill="none"
 					viewBox="0 0 24 24"
 					stroke="currentColor"
@@ -148,42 +151,48 @@
 
 	<main class="flex-auto items-center justify-start">
 		<Collections />
-		{#if switchSideBar}
+		{#if $switchSideBar}
 			<a href="/gallery"><Button iconLeft="bi:images" btnClass="uppercase w-full">Gallery</Button></a>
 		{:else}
 			<iconify-icon icon="bi:images" width="30" class=" bg-gray-500 text-white" />
+			<Tooltip  text="Gallery" position="right" active={!$switchSideBar} />
 		{/if}
+		
 	</main>
 
 	<footer class="mt-auto px-1 pb-2 text-center dark:text-white">
 		<div class="mx-1 mb-1 border-t" />
 
-		<div class="{switchSideBar ? 'grid-cols-3 grid-rows-3 ' : 'grid-cols-2 grid-rows-2 '} grid items-center justify-center overflow-hidden">
+		<div class="{$switchSideBar ? 'grid-cols-3 grid-rows-3' : 'grid-cols-2 grid-rows-2 '} grid items-center justify-center overflow-hidden">
 			<!-- Avatar with user settings -->
-			<div class="{switchSideBar ? 'order-1 row-span-2' : 'order-1 '} mx-auto">
-				<a href="/user"><Avatar width="w-10" src="/Default_User.svg" /></a>
+			<div class="{$switchSideBar ? 'order-1 row-span-2' : 'order-1 '} mx-auto">
+				<a href="/user"><Avatar width="w-8" src="/Default_User.svg" /></a>
+				<Tooltip  text="User Setting"/>
 			</div>
 
 			<!-- System Language i18n Handeling -->
-			<div class="{switchSideBar ? 'order-3 row-span-2' : 'order-2'} "><LocaleSwitcher /></div>
+			<div class="{$switchSideBar ? 'order-3 row-span-2' : 'order-2'} "><LocaleSwitcher />
+				<Tooltip  text="Language"/></div>
 
 			<!-- light/dark mode switch -->
-			<div class="{switchSideBar ? 'order-2 pt-4' : 'order-3'} ">
+			<div class="{$switchSideBar ? 'order-2 pt-4' : 'order-3'} ">
 				<ThemeSwitcher />
+				<Tooltip  text="light/dark mode"/>
 			</div>
 
 			<!-- Lucia Sign Out -->
-			<div class="{switchSideBar ? 'order-4' : 'order-4 '} mt-2">
+			<div class="{$switchSideBar ? 'order-4' : 'order-4 '} mt-2">
 				<iconify-icon icon="uil:signout" width="24" on:click={signOut} />
+				<Tooltip  text="Sign Out"/>
 			</div>
 
 			<div
-				class="{switchSideBar
+				class="{$switchSideBar
 					? 'order-5 col-span-3'
 					: 'order-5  col-span-2'}  justifiy-center mx-auto mt-1 flex w-full items-center rounded bg-gray-600/30"
 			>
 				<!-- Github discussions -->
-				<div class="{switchSideBar ? 'ml-2 mt-2' : 'hidden'} ">
+				<div class="{$switchSideBar ? 'ml-2 mt-2' : 'hidden'} ">
 					<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
 						<iconify-icon icon="mdi:comment-help" width="26" />
 					</a>

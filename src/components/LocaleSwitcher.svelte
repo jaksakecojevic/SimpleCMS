@@ -52,15 +52,40 @@
 		const value = event.target.value.toLowerCase();
 		filteredLocales = locales.filter((l) => l.toLowerCase().includes(value));
 	}
+
+	let isLoginPage = false;
+	$: {
+		const pathParts = $page.url.pathname.split('/');
+		const lang = pathParts[1];
+		const pageName = lang === 'en' ? pathParts[1] : pathParts[2];
+		isLoginPage = pageName === 'login';
+	}
 </script>
 
 <svelte:window on:popstate={handlePopStateEvent} />
 
+<!-- {#if isLoginPage}
+	<button
+		class="btn btn-sm rounded-full border border-white variant-filled-surface justify-between uppercase"
+		use:popup={languageSettings}
+	>
+		{LanguageLabel}
+	</button>
+{:else}
+	<button
+		class="btn btn-sm rounded-full variant-filled-ghost justify-between uppercase"
+		use:popup={languageSettings}
+	>
+		{LanguageLabel}
+	</button>
+{/if} -->
+
 <!-- seach autocomplete dowpdown if more than 3 languages -->
 {#if showAutocomplete}
 	<div class="relative">
+		
 		<input
-			class="rounded-full border-2 border-white bg-gray-800 uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring-2 active:ring-blue-300"
+			class="rounded-full  bg-gray-800 uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring-2 active:ring-blue-300"
 			placeholder={$locale}
 			on:input={handleInput}
 			bind:value={input}

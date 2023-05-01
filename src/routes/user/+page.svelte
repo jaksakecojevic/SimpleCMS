@@ -5,7 +5,8 @@
 	export let switchSideBar = false;
 
 	// typesafe-i18n
-	import LL from '@i18n/i18n-svelte';
+	import LL from '@src/i18n/i18n-svelte';
+
 	import Avatar from '@src/components/system/avatar/Avatar.svelte';
 	import Badges from '@src/components/system/badges/Badges.svelte';
 </script>

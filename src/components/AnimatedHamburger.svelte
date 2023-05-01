@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { toggleLeftSidebar } from '@src/stores/store';
+	import { toggleLeftSidebar, switchSideBar } from '@src/stores/store';
+	
 	let open: boolean;
 
 	toggleLeftSidebar.subscribe((n) => {
@@ -23,6 +24,7 @@
 		<path class="bottom" d="m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20" />
 	</svg>
 </button>
+
 
 <style>
 	:root {

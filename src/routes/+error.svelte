@@ -6,7 +6,7 @@
 	import '@src/stores/load';
 
 	// typesafe-i18n
-	import LL from '@i18n/i18n-svelte';
+	import LL from '@src/i18n/i18n-svelte';
 
 	let speed = 50;
 	let size = 130;

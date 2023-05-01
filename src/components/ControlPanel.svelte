@@ -39,7 +39,8 @@
 </div> -->
 
 <!-- Desktop Right Sidebar -->
-<div class="container bg-gray-800 pt-2">
+
+<div class="{$mode == 'view' ? 'block' : 'hidden'} container bg-gray-800 pt-2">
 	{#if $mode == 'view'}
 		<Button on:click={() => mode.set('create')}>Create</Button>
 	{:else if ['edit', 'create'].includes($mode)}
@@ -47,6 +48,10 @@
 			<Button on:click={saveData} backgroundColor="green" iconLeft="material-symbols:save" btnClass="w-full font-bold uppercase">
 				Save {$collection.name}
 			</Button>
+			<Button on:click={$deleteEntry} backgroundColor="red" iconLeft="icomoon-free:bin" btnClass="w-full font-bold uppercase">
+				Delete {$collection.name}
+			</Button>
+			
 		</header>
 		<main class="text-white">
 			<h2 class="font-bold">Admin Widget Area:</h2>
@@ -65,7 +70,9 @@
 			</div>
 		</footer>
 	{:else if $mode == 'delete'}
-		<Button on:click={$deleteEntry}>Delete</Button>
+	<Button on:click={$deleteEntry} backgroundColor="red" iconLeft="icomoon-free:bin" btnClass="w-full font-bold uppercase">
+		Delete {$collection.name}
+	</Button>
 	{/if}
 </div>
 

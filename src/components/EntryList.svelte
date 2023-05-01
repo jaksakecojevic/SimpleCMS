@@ -302,11 +302,10 @@
 				//refresh($collection);
 			}}
 		/>
-		<!-- MultiButton -->
-		<EntryListMultiButton />
+		
 	</div>
-	<Button on:click={() => mode.set('create')} backgroundColor="green" iconLeft="ic:outline-plus" btnClass="ml-2">Create</Button>
-	<Button on:click={() => mode.set('delete')} backgroundColor="red" iconLeft="bi:trash3-fill" btnClass="ml-2">Delete</Button>
+	<!-- MultiButton -->
+	<EntryListMultiButton />
 </div>
 
 {#if columnShow}
@@ -346,7 +345,7 @@
 	<table class="table-fixed">
 		<thead class="bg-grey-600 dark:bg-grey-300 py-1rounded-t border-b-2 capitalize text-black dark:text-white">
 			{#each $table.getHeaderGroups() as headerGroup}
-				<tr class=" divide-x ">
+				<tr class=" divide-x">
 					<th class="w-10 px-2">
 						<DeleteIcon bind:checked={deleteAll} />
 					</th>
@@ -431,16 +430,16 @@
 	<!-- Pagination -->
 	<div class="my-3 flex items-center justify-around text-gray-400">
 		<!-- show & count rows -->
-		<div class="text-surface-400 hidden text-sm md:block">
+		<div class="hidden text-sm text-gray-400 md:block">
 			{$LL.TANSTACK_Page()}
-			<span class="text-surface-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
+			<span class="text-black dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
 			{$LL.TANSTACK_of()}
 			<!-- TODO: Get actual pages -->
 			<!-- <span class="text-surface-700 dark:text-white">{$table.getState().pagination.pageCount}</span> -->
-			<span class="text-surface-700 dark:text-white"
+			<span class="text-black dark:text-white"
 				>{Math.ceil($table.getPrePaginationRowModel().rows.length / $table.getState().pagination.pageSize)}</span
 			>
-			- (<span class="text-surface-700 dark:text-white">{$table.getPrePaginationRowModel().rows.length}</span>
+			- (<span class="text-black dark:text-white">{$table.getPrePaginationRowModel().rows.length}</span>
 			{$LL.TANSTACK_Total()}
 
 			{#if $table.getPrePaginationRowModel().rows.length === 1}
@@ -453,7 +452,7 @@
 		<select
 			value={$table.getState().pagination.pageSize}
 			on:change={setPageSize}
-			class="select hidden max-w-[100px] rounded py-2 text-sm dark:bg-gray-800 dark:text-white sm:block"
+			class="select text-dark hidden max-w-[100px] rounded py-2 text-sm dark:bg-gray-800 dark:text-white sm:block"
 		>
 			{#each [10, 25, 50, 100, 500] as pageSize}
 				<option value={pageSize}>
@@ -494,11 +493,11 @@
 					min={0}
 					max={$table.getPageCount() - 1}
 					on:change={handleCurrPageInput}
-					class=" input w-14 rounded border py-[5px] dark:bg-gray-800 dark:text-white"
+					class=" input w-14 rounded border py-[5px] text-black dark:bg-gray-800 dark:text-white"
 				/>
 				<span>
 					{' '}{$LL.TANSTACK_of()}{' '}
-					<span class="dark:text-white">{$table.getPageCount()}</span>
+					<span class="text-black dark:text-white">{$table.getPageCount()}</span>
 				</span>
 			</div>
 
@@ -535,16 +534,16 @@
 
 		<!-- Pagination -->
 		<div class="text-sm text-gray-400">
-			<span class="text-gray-700 dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
+			<span class="text-black dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
 			{$LL.TANSTACK_of()}
 			<!-- TODO: Get actual page -->
 			<!-- <span class="text-surface-700 dark:text-white"
 				>{$table.getState().pagination.pageIndex + 1}</span
 			> -->
-			<span class="text-gray-700 dark:text-white"
+			<span class="text-black dark:text-white"
 				>{Math.ceil($table.getPrePaginationRowModel().rows.length / $table.getState().pagination.pageSize)}</span
 			>
-			- (<span class="text-gray-700 dark:text-white">{$table.getPrePaginationRowModel().rows.length}</span>
+			- (<span class="text-black dark:text-white">{$table.getPrePaginationRowModel().rows.length}</span>
 			{$LL.TANSTACK_Total()}
 
 			{#if $table.getPrePaginationRowModel().rows.length === 1}
@@ -556,7 +555,7 @@
 </div>
 
 <style lang="postcss">
-	/* th,
+	th,
 	td {
 		min-width: 120px;
 		text-align: left;
@@ -591,5 +590,5 @@
 	}
 	tbody tr:hover {
 		background-color: #274b6f;
-	} */
+	}
 </style>
